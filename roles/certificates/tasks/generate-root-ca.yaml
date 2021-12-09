@@ -1,0 +1,26 @@
+---
+- name: Ensuring ca directory exist
+  file:
+    path: "{{ certificates_dir }}"
+    state: "directory"
+    mode: "0770"
+
+- name: Creating root Certificate key
+  command: >
+    openssl genrsa
+    -out "{{ certificates_dir }}/ca.key"
+    4096
+  args:
+    creates: "{{ certificates_dir }}/ca.key"
+
+- name: Setting permissions on root key
+  file:
+    path: "{{ certificates_dir }}/ca.key"
+    mode: "0660"
+    state: file
+
+- name: Creating and sign root Certificate
+  command: >
+    openssl req
+    -x509
+    -new -nodes

@@ -1,0 +1,53 @@
+---
+- name: Ensuring private certificate directory exist
+  file:
+    path: "{{ certificates_dir }}"
+    state: "directory"
+    recurse: yes
+    mode: "0770"
+
+- name: Creating SSL configuration file
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ certificates_dir }}/{{ item }}"
+    mode: "0660"
+  with_items:
+    - "openssl.cnf"
+
+- name: Creating RSA private Key
+  command: >
+    openssl genrsa
+    -out "{{ key_path }}" 2048
+  args:
+    creates: "{{ key_path }}"
+
+- name: Setting permissions on private key
+  file:
+    path: "{{ key_path }}"
+    mode: "0660"
+    state: file
+
+- name: Creating Server Certificate signing request
+  command: >
+    openssl req
+    -new
+    -key "{{ key_path }}"
+    -out "{{ certificates_dir }}/cloud_service.csr"
+    -config "{{ certificates_dir }}/openssl.cnf"
+    -sha256
+  args:
+    creates: "{{ certificates_dir }}/cloud_service.csr"
+
+- name: Creating external Server Certificate
+  command: >
+    openssl x509
+    -req
+    -in "{{ certificates_dir }}/cloud_service.csr"
+    -CA "{{ ca_path }}"
+    -CAkey "{{ certificates_dir }}/ca.key"
+    -CAcreateserial
+    -out "{{ cert_path }}"
+    -days 1825
+    -sha256
+  args:
+    creates: "{{ cert_path }}"
