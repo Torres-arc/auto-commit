@@ -1,0 +1,5 @@
+{% for item in cloud_coreDns_hosts %}
+{% set address = item.address %}
+{% set domain = item.domain %}
+{{ address }} {{ domain }}
+{% endfor %}

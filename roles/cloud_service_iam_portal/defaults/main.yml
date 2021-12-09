@@ -1,0 +1,11 @@
+---
+##########
+# Docker #
+##########
+docker_registry: ''
+cloud_service_iam_portal_image_namespace: "cloud-service"
+cloud_service_iam_portal_image_name: "cloud-service-iam-portal"
+cloud_service_iam_portal_image_tag: "{{ cloud_service_iam_portal_tag }}"
+
+cloud_service_iam_portal_image_force_pull: false
+

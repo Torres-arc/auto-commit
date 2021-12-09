@@ -1,0 +1,12 @@
+---
+- name: Running cloud-coreDns container
+  docker_container:
+    name: "{{ cloud_coreDns_container_name }}"
+    image: "{{ cloud_coreDns_image_fullname }}"
+    pull: "{{ cloud_coreDns_image_force_pull }}"
+    restart_policy: always
+    network_mode: host
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "{{ cloud_coreDns_etc_path }}/Corefile:/Corefile:rw"
+      - "{{ cloud_coreDns_etc_path }}/hosts:/opt/coredns/hosts:rw"

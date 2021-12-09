@@ -13,3 +13,8 @@
 - name: remove {{ cloud_coreDns_container_name }} data folder
   file:
     path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ cloud_coreDns_etc_path }}"
+
+

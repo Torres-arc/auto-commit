@@ -1,0 +1,22 @@
+---
+##########
+# Docker #
+##########
+docker_registry: ''
+cloud_coreDns_image_namespace: "cloud-service"
+cloud_coreDns_image_name: "coredns"
+cloud_coreDns_image_tag: "{{ cloud_service_coredns_tag }}"
+
+cloud_coreDns_image_force_pull: false
+
+cloud_coreDns_image_fullname: "\
+{{ docker_registry ~ '/' if docker_registry else '' }}\
+{{ cloud_coreDns_image_namespace ~ '/' if cloud_coreDns_image_namespace else '' }}\
+{{ cloud_coreDns_image_name }}:\
+{{ cloud_coreDns_image_tag }}"
+
+# 容器名称
+cloud_coreDns_container_name: "cloud-coreDns"
+
+# 配置文件地址
+cloud_coreDns_etc_path: "/etc/{{ cloud_coreDns_container_name }}/{{ cloud_config_mode }}/"
