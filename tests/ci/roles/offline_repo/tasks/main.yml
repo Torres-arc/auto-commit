@@ -1,0 +1,17 @@
+---
+- name: ensure required folder
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: true
+  with_items:
+    - "{{ workspace }}/yum.repos.d"
+    - "{{ workspace }}/dist"
+
+- name: remove exist rpm in sync-repo folder
+  shell: |
+    #/bin/bash
+
+    repo_path={{ workspace }}/repo
+    if [[ -e $repo_path ]]; then
+      rm -rf $repo_path/*

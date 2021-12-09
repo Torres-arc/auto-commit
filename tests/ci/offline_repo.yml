@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  gather_facts: true
+  vars:
+    workspace: "{{ playbook_dir|dirname|dirname }}"
+  tasks:
+    - name: create offline repo
+      import_role:
+        name: offline_repo

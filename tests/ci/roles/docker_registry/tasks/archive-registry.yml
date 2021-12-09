@@ -1,0 +1,12 @@
+---
+- name: ensure registry_archive_path exist
+  file:
+    path: "{{ registry_archive_path|dirname }}"
+    state: directory
+    recurse: true
+
+- name: archive docker registry
+  shell: |
+    tar -cf {{ registry_archive_path }} docker
+  args:
+    chdir: "{{ registry_path }}"

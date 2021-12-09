@@ -178,3 +178,82 @@ nodes
 nodes
 
 [cloud_service_base_portal:children]
+nodes
+
+[cloud_service_ecs_portal:children]
+nodes
+
+[cloud_service_rms_portal:children]
+nodes
+
+[cloud_service_iam_portal:children]
+nodes
+
+[cloud_service_vpc_portal:children]
+nodes
+
+[cloud_service_trail_portal:children]
+nodes
+
+[cloud_service_dedicated_portal:children]
+nodes
+
+[cloud_service_management_portal:children]
+nodes
+
+[cloud_service_dns_portal:children]
+nodes
+
+[cloud_dns:children]
+nodes
+
+[cloud_trail:children]
+nodes
+
+[resource_management:children]
+nodes
+
+[cloud_service:children]
+nodes
+
+[cloud_iam:children]
+nodes
+
+[cloud_memcached:children]
+nodes
+```
+
+#### 部署工作节点
+
+```shell
+cd /root/cloud-service-deploy
+ansible-playbook -i /etc/ansible/hosts upgrade.yml
+```
+
+#### 清理运行节点
+
+如果需要可以卸载已经安装好的自助平台
+
+```shell
+cd /root/cloud-service-deploy
+ansible-playbook -i /etc/ansible/hosts destroy.yml
+```
+
+#### Web访问
+
+部署成功后可以通过虚拟IP访问界面:`https://192.168.1.200`
+
+## IPv6配置（可选）
+
+编辑 ``/etc/cloud-service/globals.yml`` 文件
+
+```shell
+# vip 地址
+internal_vip_address: fd00:2021:100::200
+
+# ip_version
+ip_version: 6
+
+# 服务监听的网卡
+network_interface: eth0
+```

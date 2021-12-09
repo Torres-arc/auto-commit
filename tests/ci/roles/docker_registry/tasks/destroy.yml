@@ -1,0 +1,10 @@
+---
+- name: remove docker registry container
+  docker_container:
+    name: "{{ registry_name }}"
+    state: absent
+
+- name: remove docker registry volume
+  docker_volume:
+    name: "{{ registry_path }}"
+    state: absent

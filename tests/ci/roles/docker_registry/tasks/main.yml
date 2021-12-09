@@ -1,0 +1,18 @@
+---
+- name: ensure required folder
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: true
+  with_items:
+    - "{{ registry_path }}"
+
+- name: start docker registry
+  docker_container:
+    name: "{{ registry_name }}"
+    image: registry:2
+    restart_policy: false
+    ports:
+      - "{{ registry_port }}:5000"
+    volumes:
+      - "{{ registry_path }}:/var/lib/registry"

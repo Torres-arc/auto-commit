@@ -1,0 +1,5 @@
+---
+registry_path: "/var/lib/registry"
+registry_port: 5000
+registry_name: registry
+registry_archive_path:
