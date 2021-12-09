@@ -1,0 +1,22 @@
+---
+##########
+# Docker #
+##########
+docker_registry: ''
+cloud_nginx_image_namespace: "cloud-service"
+cloud_nginx_image_name: "nginx"
+cloud_nginx_image_tag: "{{ cloud_service_nginx_tag }}"
+
+cloud_nginx_image_force_pull: false
+
+cloud_nginx_image_fullname: "\
+{{ docker_registry ~ '/' if docker_registry else '' }}\
+{{ cloud_nginx_image_namespace ~ '/' if cloud_nginx_image_namespace else '' }}\
+{{ cloud_nginx_image_name }}:\
+{{ cloud_nginx_image_tag }}"
+
+cloud_nginx_container_name: "cloud-nginx"
+
+# 配置文件地址
+cloud_nginx_etc_path: "/etc/{{ cloud_nginx_container_name }}/{{ cloud_config_mode }}/"
+cloud_nginx_log_path: "/var/log/{{ cloud_nginx_container_name }}/{{ cloud_config_mode }}/"
