@@ -1,0 +1,26 @@
+---
+- docker_volume_info:
+    name: mariadb
+  register: check_mariadb_volume
+
+- name: Running MariaDB bootstrap container
+  docker_container:
+    command: "/mariadb_start.sh"
+    name: "bootstrap_{{ mariadb_container_name }}"
+    image: "{{ mariadb_image_fullname }}"
+    user: mysql
+    detach: false
+    network_mode: host
+    env:
+      KOLLA_BOOTSTRAP: ""
+      DB_ROOT_PASSWORD: "{{ database_password }}"
+      DB_MAX_TIMEOUT: "{{ database_max_timeout }}"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - "{{ mariadb_etc_path }}/mariadb:/etc/sudoers.d/mariadb:ro"
+      - "{{ mariadb_etc_path }}:/etc/my.cnf.d/:ro"
+      - "{{ mariadb_etc_path }}/mariadb_start.sh:/mariadb_start.sh:ro"
+      - "{{ mariadb_etc_path }}/security.expected:/usr/local/bin/security.expected:ro"
+      - mariadb:/var/lib/mysql:rw
+  when:
+    - not check_mariadb_volume.exists

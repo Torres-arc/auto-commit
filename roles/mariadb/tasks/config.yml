@@ -1,0 +1,35 @@
+---
+- name: ensure etc folder
+  file:
+    path: "{{ mariadb_etc_path }}"
+    recurse: true
+    state: directory
+
+- name: copying over galera.cnf
+  template:
+    src: galera.cnf.j2
+    dest: "{{ mariadb_etc_path }}/galera.cnf"
+    mode: 0644
+  notify: restart mariadb service
+
+- name: configure mariadb
+  template:
+    src: wsrep-notify.sh.j2
+    dest: "{{ mariadb_etc_path }}/wsrep-notify.sh"
+    mode: 0755
+  notify: restart mariadb service
+
+- name: copy mariadb script
+  template:
+    src: "{{ item }}"
+    dest: "{{ mariadb_etc_path }}/{{ item }}"
+    mode: 0777
+  with_items:
+    - mariadb_start.sh
+    - security.expected
+
+- name: copy sudoers file
+  template:
+    src: "sudoers"
+    dest: "{{ mariadb_etc_path }}/mariadb"
+    mode: 0440

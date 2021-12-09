@@ -1,6 +1,5 @@
 ---
-# NOTE(Jeffrey4l): include_tasks from handlers can not parse variable in `name`
-- name: "Restart MariaDB container"
+- name: "{{ prefix }} | Starting MariaDB container"
   docker_container:
     command: "/mariadb_start.sh"
     env:
@@ -21,7 +20,7 @@
       - /var/log/mariadb:/var/log/mariadb:rw
       - mariadb:/var/lib/mysql:rw
 
-- name: wait the mariadb port
+- name: "{{ prefix }} | Waiting the mariadb port"
   wait_for:
     host: "{{ mariadb_listen_address }}"
     port: "{{ mariadb_listen_port }}"

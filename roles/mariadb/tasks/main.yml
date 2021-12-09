@@ -1,0 +1,22 @@
+---
+- import_tasks: "config.yml"
+
+- import_tasks: "check_cluster.yml"
+
+- name: set bootstrap node
+  set_fact:
+    mariadb_bootstrap_node: "{{ ansible_play_hosts|first }}"
+  when:
+    - mariadb_bootstrap_node is not defined
+
+- name: failed when bootstrap node is unknown
+  fail:
+    msg: "mariadb_bootstrap_node variable value: {{ mariadb_bootstrap_node }} is unknown"
+  when:
+    - mariadb_bootstrap_node not in ansible_play_hosts
+
+# all node is running as expected
+- name: print cluster status message
+  debug:
+    msg: |-
+      up: {{ groups.cluster_status_up|default([]) }}
