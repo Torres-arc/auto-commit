@@ -1,0 +1,68 @@
+---
+# 运行容器，初始化数据库
+- name: Bootstrap cloud service api database
+  docker_container:
+    command: "cloud-service-dbsync upgrade"
+    name: "{{ cloud_ecs_api_container_name }}"
+    image: "{{ cloud_ecs_image_fullname }}"
+    pull: "{{ cloud_ecs_image_force_pull }}"
+    user: root
+    network_mode: host
+    cleanup: true
+    detach: false
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - "{{ cloud_ecs_api_log_path }}/:/var/log/kolla/cloud-service/"
+      - "{{ cloud_ecs_etc_path }}/api_paste.ini:/etc/cloud_service/api_paste.ini:rw"
+      - "{{ cloud_ecs_etc_path }}/cloud-service-config-generator.conf:/etc/cloud_service/cloud-service-config-generator.conf:rw"
+      - "{{ cloud_ecs_etc_path }}/cloud_service_api.conf:/etc/cloud_service/cloud_service.conf:rw"
+  when:
+    - inventory_hostname == ecs_bootstrap_node
+
+# 运行容器，执行cloud service api
+- name: Running cloud-service-api container
+  docker_container:
+    command: "httpd -DFOREGROUND"
+    name: "{{ cloud_ecs_api_container_name }}"
+    image: "{{ cloud_ecs_image_fullname }}"
+    pull: "{{ cloud_ecs_image_force_pull }}"
+    user: root
+    network_mode: host
+    restart_policy: always
+    env:
+      INTERNAL_ECS_PORT: "{{ internal_ecs_port }}"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - "{{ cloud_ecs_api_log_path }}/:/var/log/kolla/cloud-service/"
+      - "{{ cloud_ecs_etc_path }}/api_paste.ini:/etc/cloud_service/api_paste.ini:rw"
+      - "{{ cloud_ecs_etc_path }}/cloud-service-config-generator.conf:/etc/cloud_service/cloud-service-config-generator.conf:rw"
+      - "{{ cloud_ecs_etc_path }}/cloud_service_api.conf:/etc/cloud_service/cloud_service.conf:rw"
+      - "{{ cloud_ecs_etc_path }}/app_httpd.conf:/etc/httpd/conf.d/app_httpd.conf:rw"
+
+# 运行容器，执行cloud-service-engine
+- name: Running cloud service engine container
+  docker_container:
+    command: "cloud-service-engine"
+    name: "{{ cloud_ecs_engine_container_name }}"
+    image: "{{ cloud_ecs_image_fullname }}"
+    pull: "{{ cloud_ecs_image_force_pull }}"
+    user: root
+    network_mode: host
+    restart_policy: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - "{{ cloud_ecs_engine_log_path }}/:/var/log/kolla/cloud-service/"
+      - "{{ cloud_ecs_etc_path }}/api_paste.ini:/etc/cloud_service/api_paste.ini:rw"
+      - "{{ cloud_ecs_etc_path }}/cloud-service-config-generator.conf:/etc/cloud_service/cloud-service-config-generator.conf:rw"
+      - "{{ cloud_ecs_etc_path }}/cloud_service_engine.conf:/etc/cloud_service/cloud_service.conf:rw"
+
+
+# 初始化ecs api容器，设置日志目录权限
+- name: Bootstrap ecs api container
+  command: "docker exec {{ cloud_ecs_api_container_name }} bash -c 'chmod -R 0777 /var/log/kolla/cloud-service/' "
+
+
+
+# 初始化ecs engine容器，设置日志目录权限
+- name: Bootstrap ecs engine container
+  command: "docker exec {{ cloud_ecs_engine_container_name }} bash -c 'chmod -R 0777 /var/log/kolla/cloud-service/' "

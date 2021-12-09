@@ -1,0 +1,24 @@
+---
+############
+# 删除容器，数据目录 #
+############
+- name: remove {{ cloud_ecs_api_container_name }} container
+  docker_container:
+    name: "{{ cloud_ecs_api_container_name }}"
+    state: absent
+
+- name: remove {{ cloud_ecs_engine_container_name }} container
+  docker_container:
+    name: "{{ cloud_ecs_engine_container_name }}"
+    state: absent
+
+- name: remove {{ cloud_ecs_container_name }} data folder
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ cloud_ecs_etc_path }}"
+    - "{{ cloud_ecs_api_log_path }}"
+    - "{{ cloud_ecs_engine_log_path }}"
+
+

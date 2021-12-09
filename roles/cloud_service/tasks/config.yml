@@ -1,1 +1,38 @@
 ---
+# 创建配置文件目录和数据文件目录
+- name: ensure cloud-service etc and data folder
+  file:
+    path: "{{ item }}"
+    recurse: true
+    state: directory
+  with_items:
+    - "{{ cloud_ecs_etc_path }}"
+    - "{{ cloud_ecs_api_log_path }}"
+    - "{{ cloud_ecs_engine_log_path }}"
+
+# 设置rabbitmq的url
+- name: set rabbitmq url
+  set_fact:
+    rabbitmq_url: "{{ network_interface|address(ip_version=ip_version) }}:{{ rabbitmq_listen_port }}"
+
+# 设置监听地址
+- name: set ecs host
+  set_fact:
+    cloud_service_host: "{{ network_interface|address(ip_version=ip_version) }}"
+
+# 设置启动节点
+- name: set ecs bootstrap node
+  set_fact:
+    ecs_bootstrap_node: "{{ ansible_play_hosts|first }}"
+
+# 拷贝配置文件至配置文件目录
+- name: copy cloud-service config files
+  template:
+    src: "{{ item.value.name }}"
+    dest: "{{ item.value.path }}"
+    mode: 0777
+  with_dict:
+    - "{{ cloud_ecs_config_files }}"
+  notify:
+    - restart cloud_ecs_api service
+    - restart cloud_ecs_engine service
