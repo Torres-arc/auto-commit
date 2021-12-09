@@ -1,0 +1,30 @@
+---
+##########
+# Docker #
+##########
+docker_registry: ''
+cloud_service_ecs_portal_image_namespace: "cloud-service"
+cloud_service_ecs_portal_image_name: "cloud-service-ecs-portal"
+cloud_service_ecs_portal_image_tag: "{{ cloud_service_ecs_portal_tag }}"
+
+cloud_service_ecs_portal_image_force_pull: false
+
+cloud_service_ecs_portal_image_fullname: "\
+{{ docker_registry ~ '/' if docker_registry else '' }}\
+{{ cloud_service_ecs_portal_image_namespace ~ '/' if cloud_service_ecs_portal_image_namespace else '' }}\
+{{ cloud_service_ecs_portal_image_name }}:\
+{{ cloud_service_ecs_portal_image_tag }}"
+
+cloud_service_ecs_portal_container_name: "cloud-service-ecs-portal"
+
+############
+# portal config #
+############
+cloud_service_ecs_portal_etc_path: "/etc/{{ cloud_service_ecs_portal_container_name }}"
+
+# internal endpoints
+cloud_service_portal_internal_ecs: "http://{{ internal_vip_address }}:{{ internal_ecs_port }}/"
+cloud_service_portal_internal_vpc: "http://{{ internal_vip_address }}:{{ internal_vpc_port }}/"
+cloud_service_portal_internal_rms: "http://{{ internal_vip_address }}:{{ internal_rms_port }}/"
+cloud_service_portal_internal_iam: "http://{{ internal_vip_address }}:{{ internal_iam_port }}/"
+cloud_service_portal_internal_monitor: "http://{{ internal_vip_address }}:{{ internal_monitor_port }}/"

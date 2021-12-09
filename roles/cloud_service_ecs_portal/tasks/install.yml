@@ -9,3 +9,4 @@
     restart_policy: always
     volumes:
       - /etc/localtime:/etc/localtime:ro
+      - "{{ cloud_service_ecs_portal_etc_path }}/nginx.conf:/etc/nginx/nginx.conf:rw"
