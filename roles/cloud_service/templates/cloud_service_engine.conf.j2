@@ -937,3 +937,88 @@ endpoint=http://{{ internal_vip_address }}:{{ internal_rms_port }}
 
 # Determines how the next RabbitMQ node is chosen in case the one we are
 # currently connected to becomes unavailable. Takes effect only if more than
+# one RabbitMQ node is provided in config. (string value)
+# Possible values:
+# round-robin - <No description provided>
+# shuffle - <No description provided>
+#kombu_failover_strategy = round-robin
+
+# The RabbitMQ login method. (string value)
+# Possible values:
+# PLAIN - <No description provided>
+# AMQPLAIN - <No description provided>
+# RABBIT-CR-DEMO - <No description provided>
+#rabbit_login_method = AMQPLAIN
+
+# How frequently to retry connecting with RabbitMQ. (integer value)
+#rabbit_retry_interval = 1
+
+# How long to backoff for between retries when connecting to RabbitMQ. (integer
+# value)
+#rabbit_retry_backoff = 2
+
+# Maximum interval of RabbitMQ connection retries. Default is 30 seconds.
+# (integer value)
+#rabbit_interval_max = 30
+
+# Try to use HA queues in RabbitMQ (x-ha-policy: all). If you change this
+# option, you must wipe the RabbitMQ database. In RabbitMQ 3.0, queue mirroring
+# is no longer controlled by the x-ha-policy argument when declaring a queue.
+# If you just want to make sure that all queues (except those with auto-
+# generated names) are mirrored across all nodes, run: "rabbitmqctl set_policy
+# HA '^(?!amq\.).*' '{"ha-mode": "all"}' " (boolean value)
+#rabbit_ha_queues = false
+
+# Positive integer representing duration in seconds for queue TTL (x-expires).
+# Queues which are unused for the duration of the TTL are automatically
+# deleted. The parameter affects only reply and fanout queues. (integer value)
+# Minimum value: 1
+#rabbit_transient_queues_ttl = 1800
+
+# Specifies the number of messages to prefetch. Setting to zero allows
+# unlimited messages. (integer value)
+#rabbit_qos_prefetch_count = 0
+
+# Number of seconds after which the Rabbit broker is considered down if
+# heartbeat's keep-alive fails (0 disables heartbeat). (integer value)
+#heartbeat_timeout_threshold = 60
+
+# How often times during the heartbeat_timeout_threshold we check the
+# heartbeat. (integer value)
+#heartbeat_rate = 2
+
+# Enable/Disable the RabbitMQ mandatory flag for direct send. The direct send
+# is used as reply,so the MessageUndeliverable exception is raised in case the
+# client queue does not exist. (integer value)
+#direct_mandatory_flag = True
+
+
+[oslo_middleware]
+
+#
+# From oslo.middleware.http_proxy_to_wsgi
+#
+
+# Whether the application is behind a proxy or not. This determines if the
+# middleware should parse the headers or not. (boolean value)
+#enable_proxy_headers_parsing = false
+
+
+[service]
+
+#
+# From resource_management
+#
+
+# Name of this node. This can be an opaque identifier. It is not necessarily a
+# hostname, FQDN, or IP address. However, the node name must be valid within an
+# AMQP key, and if using ZeroMQ, a valid hostname, FQDN, or IP address. (string
+# value)
+#host = 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa
+
+# Interval, in seconds, between running periodic tasks (integer value)
+#periodic_interval = 60
+
+# Range, in seconds, to randomly delay when starting the periodic task
+# scheduler to reduce stampeding. (Disable by setting to 0) (integer value)
+#periodic_fuzzy_delay = 60

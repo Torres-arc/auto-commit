@@ -1,0 +1,20 @@
+[pipeline:main]
+pipeline = cors http_proxy_to_wsgi request_id authtoken cloud_service_api_v1
+
+[app:cloud_service_api_v1]
+paste.app_factory = cloud_service.api.app:app_factory
+
+[filter:authtoken]
+acl_public_routes = /v1, /v1/auth/tokens
+paste.filter_factory = cloud_service.api.middleware:AuthTokenMiddleware.factory
+
+[filter:request_id]
+paste.filter_factory = oslo_middleware:RequestId.factory
+
+[filter:cors]
+paste.filter_factory =  oslo_middleware.cors:filter_factory
+oslo_config_project = cloud_service
+
+[filter:http_proxy_to_wsgi]
+paste.filter_factory = oslo_middleware.http_proxy_to_wsgi:HTTPProxyToWSGI.factory
+oslo_config_project = cloud_service
