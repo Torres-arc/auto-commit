@@ -487,3 +487,153 @@ endpoint=http://{{ internal_vip_address }}:{{ internal_rms_port }}
 # the middleware share a caching backend with swift. Otherwise, use the
 # ``memcached_servers`` option instead. (string value)
 #cache = <None>
+
+# Required if identity server requires client certificate (string value)
+#certfile = <None>
+
+# Required if identity server requires client certificate (string value)
+#keyfile = <None>
+
+# A PEM encoded Certificate Authority to use when verifying HTTPs connections.
+# Defaults to system CAs. (string value)
+#cafile = <None>
+
+# Verify HTTPS connections. (boolean value)
+#insecure = false
+
+# The region in which the identity server can be found. (string value)
+#region_name = <None>
+
+# Optionally specify a list of memcached server(s) to use for caching. If left
+# undefined, tokens will instead be cached in-process. (list value)
+# Deprecated group/name - [keystone_authtoken]/memcache_servers
+#memcached_servers = <None>
+
+# In order to prevent excessive effort spent validating tokens, the middleware
+# caches previously-seen tokens for a configurable duration (in seconds). Set
+# to -1 to disable caching completely. (integer value)
+#token_cache_time = 300
+
+# (Optional) If defined, indicate whether token data should be authenticated or
+# authenticated and encrypted. If MAC, token data is authenticated (with HMAC)
+# in the cache. If ENCRYPT, token data is encrypted and authenticated in the
+# cache. If the value is not one of these options or empty, auth_token will
+# raise an exception on initialization. (string value)
+# Possible values:
+# None - <No description provided>
+# MAC - <No description provided>
+# ENCRYPT - <No description provided>
+#memcache_security_strategy = None
+
+# (Optional, mandatory if memcache_security_strategy is defined) This string is
+# used for key derivation. (string value)
+#memcache_secret_key = <None>
+
+# (Optional) Number of seconds memcached server is considered dead before it is
+# tried again. (integer value)
+#memcache_pool_dead_retry = 300
+
+# (Optional) Maximum total number of open connections to every memcached
+# server. (integer value)
+#memcache_pool_maxsize = 10
+
+# (Optional) Socket timeout in seconds for communicating with a memcached
+# server. (integer value)
+#memcache_pool_socket_timeout = 3
+
+# (Optional) Number of seconds a connection to memcached is held unused in the
+# pool before it is closed. (integer value)
+#memcache_pool_unused_timeout = 60
+
+# (Optional) Number of seconds that an operation will wait to get a memcached
+# client connection from the pool. (integer value)
+#memcache_pool_conn_get_timeout = 10
+
+# (Optional) Use the advanced (eventlet safe) memcached client pool. The
+# advanced pool will only work under python 2.x. (boolean value)
+#memcache_use_advanced_pool = false
+
+# (Optional) Indicate whether to set the X-Service-Catalog header. If False,
+# middleware will not ask for service catalog on token validation and will not
+# set the X-Service-Catalog header. (boolean value)
+#include_service_catalog = true
+
+# Used to control the use and type of token binding. Can be set to: "disabled"
+# to not check token binding. "permissive" (default) to validate binding
+# information if the bind type is of a form known to the server and ignore it
+# if not. "strict" like "permissive" but if the bind type is unknown the token
+# will be rejected. "required" any form of token binding is needed to be
+# allowed. Finally the name of a binding method that must be present in tokens.
+# (string value)
+#enforce_token_bind = permissive
+
+# A choice of roles that must be present in a service token. Service tokens are
+# allowed to request that an expired token can be used and so this check should
+# tightly control that only actual services should be sending this token. Roles
+# here are applied as an ANY check so any role in this list must be present.
+# For backwards compatibility reasons this currently only affects the
+# allow_expired check. (list value)
+#service_token_roles = service
+
+# For backwards compatibility reasons we must let valid service tokens pass
+# that don't pass the service_token_roles check as valid. Setting this true
+# will become the default in a future release and should be enabled if
+# possible. (boolean value)
+#service_token_roles_required = false
+
+# The name or type of the service as it appears in the service catalog. This is
+# used to validate tokens that have restricted access rules. (string value)
+#service_type = <None>
+
+# Authentication type to load (string value)
+# Deprecated group/name - [keystone_authtoken]/auth_plugin
+#auth_type = <None>
+
+# Config Section from which to load plugin specific options (string value)
+#auth_section = <None>
+
+
+[oslo_messaging_amqp]
+
+#
+# From oslo.messaging
+#
+
+# Name for the AMQP container. must be globally unique. Defaults to a generated
+# UUID (string value)
+#container_name = <None>
+
+# Timeout for inactive connections (in seconds) (integer value)
+#idle_timeout = 0
+
+# Debug: dump AMQP frames to stdout (boolean value)
+#trace = false
+
+# Attempt to connect via SSL. If no other ssl-related parameters are given, it
+# will use the system's CA-bundle to verify the server's certificate. (boolean
+# value)
+#ssl = false
+
+# CA certificate PEM file used to verify the server's certificate (string
+# value)
+#ssl_ca_file =
+
+# Self-identifying certificate PEM file for client authentication (string
+# value)
+#ssl_cert_file =
+
+# Private key PEM file used to sign ssl_cert_file certificate (optional)
+# (string value)
+#ssl_key_file =
+
+# Password for decrypting ssl_key_file (if encrypted) (string value)
+#ssl_key_password = <None>
+
+# By default SSL checks that the name in the server's certificate matches the
+# hostname in the transport_url. In some configurations it may be preferable to
+# use the virtual hostname instead, for example if the server uses the Server
+# Name Indication TLS extension (rfc6066) to provide a certificate per virtual
+# host. Set ssl_verify_vhost to True if the server's SSL certificate uses the
+# virtual host name instead of the DNS name. (boolean value)
+#ssl_verify_vhost = false
+
