@@ -9,3 +9,18 @@ cloud_service_iam_portal_image_tag: "{{ cloud_service_iam_portal_tag }}"
 
 cloud_service_iam_portal_image_force_pull: false
 
+cloud_service_iam_portal_image_fullname: "\
+{{ docker_registry ~ '/' if docker_registry else '' }}\
+{{ cloud_service_iam_portal_image_namespace ~ '/' if cloud_service_iam_portal_image_namespace else '' }}\
+{{ cloud_service_iam_portal_image_name }}:\
+{{ cloud_service_iam_portal_image_tag }}"
+
+cloud_service_iam_portal_container_name: "cloud-service-iam-portal"
+
+############
+# portal config #
+############
+cloud_service_iam_portal_etc_path: "/etc/{{ cloud_service_iam_portal_container_name }}"
+
+# internal endpoints
+cloud_service_portal_internal_iam: "http://{{ internal_vip_address }}:{{ internal_iam_port }}/"
