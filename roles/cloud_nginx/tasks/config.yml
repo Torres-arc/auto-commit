@@ -1,0 +1,28 @@
+---
+
+# 创建配置文件目录和数据文件目录
+- name: ensure nginx etc path
+  become: True
+  file:
+    path: "{{ item }}"
+    recurse: yes
+    state: directory
+    mode: 0777
+  with_items:
+    - "{{ cloud_nginx_etc_path }}"
+    - "{{ cloud_nginx_log_path }}"
+
+# 设置监听地址
+- name: set nginx ip
+  set_fact:
+    cloud_nginx_ip: "{{ network_interface|address(ip_version=ip_version) }}"
+
+- name: copy center nginx config file
+  template:
+    src: nginx_center.conf.j2
+    dest: "{{ cloud_nginx_etc_path }}/nginx.conf"
+  when:
+    - cloud_config_mode == "center"
+  notify:
+    - restart cloud-nginx service
+

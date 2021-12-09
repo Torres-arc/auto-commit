@@ -75,3 +75,51 @@
             docker pull {{ item }}
             docker tag {{ item }} 127.0.0.1:{{ registry_port }}/{{ item }}
             docker push 127.0.0.1:{{ registry_port }}/{{ item }}
+          with_items: "{{ prom_imags }}"
+
+        - name: archive all registry files
+          import_role:
+            name: docker_registry
+            tasks_from: archive-registry.yml
+
+        # save registry-image.tar
+        - name: save docker registry image
+          shell: |
+            docker save registry:2 -o "{{ build_path }}/registry-image.tar"
+
+        # extra setup.sh file
+        - name: extra setup.sh file
+          shell: |
+            tar -xf cloud-service-deploy.tar.gz \
+              cloud-service-deploy/scripts/setup.sh \
+              --strip-components 2
+          args:
+            chdir: "{{ build_path }}"
+
+        # archive all files
+        - name: archive all files
+          shell: |
+            tar \
+              --transform "s,^,release/," \
+              -cf {{ dist_path }}/release.tar \
+              docker-registry.tar \
+              cloud-service-deploy.tar.gz \
+              registry-image.tar \
+              repo.tar.gz \
+              setup.sh \
+          args:
+            chdir: "{{ build_path }}"
+      always:
+        - name: cleanup docker registyr
+          import_role:
+            name: docker_registry
+            tasks_from: destroy.yml
+          when:
+            - enable_cleanup | bool
+        - name: cleanup local file
+          shell: |
+            rm -rf build
+          args:
+            chdir: "{{ workspace }}"
+          when:
+            - enable_cleanup | bool
