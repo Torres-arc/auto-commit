@@ -977,3 +977,153 @@ sender_pwd = {{ email_sender_pwd }}
 # From oslo.middleware
 #
 
+# DEPRECATED: The path to respond to healtcheck requests on. (string value)
+# This option is deprecated for removal.
+# Its value may be silently ignored in the future.
+#path = /healthcheck
+
+# Show more detailed information as part of the response. Security note:
+# Enabling this option may expose sensitive details about the service being
+# monitored. Be sure to verify that it will not violate your security policies.
+# (boolean value)
+#detailed = false
+
+# Additional backends that can perform health checks and report that
+# information back as part of a request. (list value)
+#backends =
+
+# Check the presence of a file to determine if an application is running on a
+# port. Used by DisableByFileHealthcheck plugin. (string value)
+#disable_by_file_path = <None>
+
+# Check the presence of a file based on a port to determine if an application
+# is running on a port. Expects a "port:path" list of strings. Used by
+# DisableByFilesPortsHealthcheck plugin. (list value)
+#disable_by_file_paths =
+
+
+[identity]
+
+#
+# From keystone
+#
+
+# This references the domain to use for all Identity API v2 requests (which are
+# not aware of domains). A domain with this ID can optionally be created for
+# you by `keystone-manage bootstrap`. The domain referenced by this ID cannot
+# be deleted on the v3 API, to prevent accidentally breaking the v2 API. There
+# is nothing special about this domain, other than the fact that it must exist
+# to order to maintain support for your v2 clients. There is typically no
+# reason to change this value. (string value)
+#default_domain_id = default
+
+# A subset (or all) of domains can have their own identity driver, each with
+# their own partial configuration options, stored in either the resource
+# backend or in a file in a domain configuration directory (depending on the
+# setting of `[identity] domain_configurations_from_database`). Only values
+# specific to the domain need to be specified in this manner. This feature is
+# disabled by default, but may be enabled by default in a future release; set
+# to true to enable. (boolean value)
+#domain_specific_drivers_enabled = false
+
+# By default, domain-specific configuration data is read from files in the
+# directory identified by `[identity] domain_config_dir`. Enabling this
+# configuration option allows you to instead manage domain-specific
+# configurations through the API, which are then persisted in the backend
+# (typically, a SQL database), rather than using configuration files on disk.
+# (boolean value)
+#domain_configurations_from_database = false
+
+# Absolute path where keystone should locate domain-specific `[identity]`
+# configuration files. This option has no effect unless `[identity]
+# domain_specific_drivers_enabled` is set to true. There is typically no reason
+# to change this value. (string value)
+#domain_config_dir = /etc/keystone/domains
+
+# Entry point for the identity backend driver in the `keystone.identity`
+# namespace. Keystone provides a `sql` and `ldap` driver. This option is also
+# used as the default driver selection (along with the other configuration
+# variables in this section) in the event that `[identity]
+# domain_specific_drivers_enabled` is enabled, but no applicable domain-
+# specific configuration is defined for the domain in question. Unless your
+# deployment primarily relies on `ldap` AND is not using domain-specific
+# configuration, you should typically leave this set to `sql`. (string value)
+#driver = sql
+
+# Toggle for identity caching. This has no effect unless global caching is
+# enabled. There is typically no reason to disable this. (boolean value)
+#caching = true
+
+# Time to cache identity data (in seconds). This has no effect unless global
+# and identity caching are enabled. (integer value)
+#cache_time = 600
+
+# Maximum allowed length for user passwords. Decrease this value to improve
+# performance. Changing this value does not effect existing passwords. (integer
+# value)
+# Maximum value: 4096
+#max_password_length = 4096
+
+# Maximum number of entities that will be returned in an identity collection.
+# (integer value)
+#list_limit = <None>
+
+# The password hashing algorithm to use for passwords stored within keystone.
+# (string value)
+# Possible values:
+# bcrypt - <No description provided>
+# scrypt - <No description provided>
+# pbkdf2_sha512 - <No description provided>
+#password_hash_algorithm = bcrypt
+
+# This option represents a trade off between security and performance. Higher
+# values lead to slower performance, but higher security. Changing this option
+# will only affect newly created passwords as existing password hashes already
+# have a fixed number of rounds applied, so it is safe to tune this option in a
+# running cluster.  The default for bcrypt is 12, must be between 4 and 31,
+# inclusive.  The default for scrypt is 16, must be within `range(1,32)`.  The
+# default for pbkdf_sha512 is 60000, must be within `range(1,1<<32)`  WARNING:
+# If using scrypt, increasing this value increases BOTH time AND memory
+# requirements to hash a password. (integer value)
+#password_hash_rounds = <None>
+
+# Optional block size to pass to scrypt hash function (the `r` parameter).
+# Useful for tuning scrypt to optimal performance for your CPU architecture.
+# This option is only used when the `password_hash_algorithm` option is set to
+# `scrypt`. Defaults to 8. (integer value)
+#scrypt_block_size = <None>
+
+# Optional parallelism to pass to scrypt hash function (the `p` parameter).
+# This option is only used when the `password_hash_algorithm` option is set to
+# `scrypt`. Defaults to 1. (integer value)
+#scrypt_parallelism = <None>
+
+# Number of bytes to use in scrypt and pbkfd2_sha512 hashing salt.  Default for
+# scrypt is 16 bytes. Default for pbkfd2_sha512 is 16 bytes.  Limited to a
+# maximum of 96 bytes due to the size of the column used to store password
+# hashes. (integer value)
+# Minimum value: 0
+# Maximum value: 96
+#salt_bytesize = <None>
+
+
+[identity_mapping]
+
+#
+# From keystone
+#
+
+# Entry point for the identity mapping backend driver in the
+# `keystone.identity.id_mapping` namespace. Keystone only provides a `sql`
+# driver, so there is no reason to change this unless you are providing a
+# custom entry point. (string value)
+#driver = sql
+
+# Entry point for the public ID generator for user and group entities in the
+# `keystone.identity.id_generator` namespace. The Keystone identity mapper only
+# supports generators that produce 64 bytes or less. Keystone only provides a
+# `sha256` entry point, so there is no reason to change this value unless
+# you're providing a custom entry point. (string value)
+#generator = sha256
+
+# The format of user and group IDs changed in Juno for backends that do not
