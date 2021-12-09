@@ -100,3 +100,9 @@ http {
           proxy_pass {{ cloud_service_portal_internal_iam }};
         }
 
+        location /monitor-api {
+          proxy_pass {{ cloud_service_portal_internal_monitor }};
+        }
+
+    }
+}

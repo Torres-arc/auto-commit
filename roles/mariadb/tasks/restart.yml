@@ -1,0 +1,18 @@
+---
+# NOTE(Jeffrey4l): include_tasks from handlers can not parse variable in `name`
+- name: "Restart MariaDB container"
+  docker_container:
+    command: "/mariadb_start.sh"
+    env:
+      ARGS: "{{ args|default('') }}"
+    name: "{{ mariadb_container_name }}"
+    image: "{{ mariadb_image_fullname }}"
+    pull: "{{ mariadb_image_force_pull }}"
+    user: mysql
+    network_mode: host
+    restart_policy: always
+    restart: "{{ restart|default(omit) }}"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - "{{ mariadb_etc_path }}/galera.cnf:/etc/my.cnf.d/galera.cnf:ro"
+      - "{{ mariadb_etc_path }}/mariadb:/etc/sudoers.d/mariadb:ro"

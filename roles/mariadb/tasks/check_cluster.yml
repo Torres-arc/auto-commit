@@ -1,0 +1,31 @@
+---
+- name: check docker volume
+  docker_volume_info:
+    name: mariadb
+  register: check_mariadb_volume
+
+- name: check mariadb container
+  docker_container_info:
+    name: "{{ mariadb_container_name }}"
+  register: check_mariadb_container
+  when:
+    - check_mariadb_volume.exists
+
+# TODO(jeffrey4l): check port and cluster status from show status
+
+- name: set cluster status variable
+  set_fact:
+    cluster_status: up
+  when:
+    - check_mariadb_container.exists | default(False)
+    - check_mariadb_container.container.State.Running | default(False)
+
+- name: set cluster status for failed node
+  set_fact:
+    cluster_status: down
+  when:
+    - not check_mariadb_container.container.State.Running | default(False)
+
+- name: group by cluster_status
+  group_by:
+    key: "cluster_status_{{ cluster_status }}"
