@@ -1,0 +1,38 @@
+---
+##########
+# Docker #
+##########
+docker_registry: ''
+rabbitmq_image_namespace: "cloud-service"
+rabbitmq_image_name: "common"
+rabbitmq_image_tag: "{{ cloud_service_common_tag }}"
+
+rabbitmq_image_force_pull: true
+
+rabbitmq_image_fullname: "\
+{{ docker_registry ~ '/' if docker_registry else '' }}\
+{{ rabbitmq_image_namespace ~ '/' if rabbitmq_image_namespace else '' }}\
+{{ rabbitmq_image_name }}:\
+{{ rabbitmq_image_tag }}"
+
+rabbitmq_container_name: "rabbitmq"
+
+############
+# rabbitmq #
+############
+rabbitmq_etc_path: "/etc/{{ rabbitmq_container_name }}"
+
+rabbitmq_ip_version: 4
+rabbitmq_listen_interface: any
+rabbitmq_listen_port: 5672
+rabbitmq_management_port: 15672
+
+rabbitmq_listen_address: "{{ rabbitmq_listen_interface|address(ip_version=rabbitmq_ip_version) }}"
+
+rabbitmq_cluster_cookie: pass
+rabbitmq_user: cloud-service
+rabbitmq_password: pass
+rabbitmq_plugins: "[rabbitmq_management, prometheus_rabbitmq_exporter]."
+
+# destroy tasks
+rabbitmq_destroy_all: true

@@ -89,3 +89,11 @@ http {
         }
 
         location /rms-api {
+          proxy_pass {{ cloud_service_portal_internal_rms }};
+        }
+
+        location /iam-api {
+          proxy_pass {{ cloud_service_portal_internal_iam }};
+        }
+    }
+}

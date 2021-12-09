@@ -1,0 +1,17 @@
+---
+- name: start rabbitmq container
+  docker_container:
+    name: "{{ rabbitmq_container_name }}"
+    image: "{{ rabbitmq_image_fullname }}"
+    command: "/rabbitmq_start.sh"
+    user: root
+    network_mode: host
+    pull: "{{ rabbitmq_image_force_pull }}"
+    restart_policy: always
+    env:
+      RABBITMQ_CLUSTER_COOKIE: "{{ rabbitmq_cluster_cookie }}"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - "{{ rabbitmq_etc_path }}:/etc/rabbitmq:ro"
+      - "{{ rabbitmq_etc_path }}/rabbitmq_start.sh:/rabbitmq_start.sh:ro"
+      - rabbitmq:/var/lib/rabbitmq:rw

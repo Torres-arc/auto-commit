@@ -1,0 +1,38 @@
+---
+- name: ensure etc folder
+  file:
+    path: "{{ rabbitmq_etc_path }}"
+    recurse: true
+    state: directory
+
+- name: configure rabbitmq
+  template:
+    src: rabbitmq.conf.j2
+    dest: "{{ rabbitmq_etc_path }}/rabbitmq.conf"
+    mode: 0644
+  notify: restart rabbitmq service
+
+- name: configure rabbitmq
+  template:
+    src: definitions.json.j2
+    dest: "{{ rabbitmq_etc_path }}/definitions.json"
+    mode: 0644
+  notify: restart rabbitmq service
+
+- name: enable rabbitmq plugins
+  copy:
+    content: "{{ rabbitmq_plugins }}"
+    dest: /etc/rabbitmq/enabled_plugins
+    mode: 0644
+  notify: restart rabbitmq service
+
+- name: copy rabbitmq script
+  template:
+    src: rabbitmq_start.sh
+    dest: "{{ rabbitmq_etc_path }}/rabbitmq_start.sh"
+    mode: 0777
+  notify: restart rabbitmq service
+
+- name: create rabbitmq volume
+  docker_volume:
+    name: rabbitmq

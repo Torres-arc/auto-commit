@@ -1,0 +1,9 @@
+listeners.tcp.1 = {{ rabbitmq_listen_address }}:{{ rabbitmq_listen_port }}
+cluster_partition_handling = pause_minority
+
+management.listener.ip = {{ rabbitmq_listen_address }}
+management.listener.port = {{ rabbitmq_management_port }}
+management.load_definitions = /etc/rabbitmq/definitions.json
+
+cluster_formation.peer_discovery_backend = rabbit_peer_discovery_classic_config
+{% for host in groups['rabbitmq'] %}
