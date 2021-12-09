@@ -2,3 +2,33 @@
 - name: Running cloud-vpc container
   docker_container:
     name: "{{ tomcat_container_name }}"
+    image: "{{ tomcat_image_fullname }}"
+    pull: "{{ tomcat_image_force_pull }}"
+    user: root
+    network_mode: host
+    restart_policy: always
+    env:
+      IAM_HOST: "{{ internal_vip_address }}"
+      IAM_PORT: "{{ internal_iam_port }}"
+      ECS_HOST: "{{ internal_vip_address }}"
+      ECS_PORT: "{{ internal_ecs_port }}"
+      RMS_HOST: "{{ internal_vip_address }}"
+      SERVER_PORT: "{{ internal_vpc_port }}"
+      RMS_PORT: "{{ internal_rms_port }}"
+      SERVER_ADDRESS: "{{ vpc_host }}"
+      MARIADB_IP: "{{ internal_vip_address }}"
+      MARIADB_PORT: "{{ mariadb_listen_port | string }}"
+      MARIADB_DB_NAME: "{{ cloud_vpc_database_name }}"
+      MARIADB_USERNAME: "{{ database_user }}"
+      MARIADB_PASSWORD: "{{ database_password }}"
+      RABBITMQ_USERNAME: "{{ rabbitmq_user }}"
+      RABBITMQ_PASSWORD: "{{ rabbitmq_password }}"
+      RABBITMQ_ADDRESSES: "{{ rabbitmq_url }}"
+      LOG_LEVEL: "{{ log_level }}"
+      ORDER_ENDPOINT: "{{ order_url }}"
+      ORDER_PORT: "{{ order_port }}"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/pki:/etc/pki:ro
+      - /var/log/cloud-vpc:/usr/app/log:rw
+      - "{{ tomcat_etc_path }}/cidr.json:/usr/app/bin/cidr.json:rw"

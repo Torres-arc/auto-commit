@@ -1,0 +1,11 @@
+---
+- import_tasks: "config.yml"
+
+- import_tasks: "init_database.yml"
+  delegate_to: "{{ ansible_play_hosts.0 }}"
+  run_once: true
+
+- import_tasks: "install.yml"
+
+- name: flush handlers
+  meta: flush_handlers
