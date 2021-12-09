@@ -1,0 +1,36 @@
+---
+
+# 获取当前版本
+- name: get current cloud memcached version file
+  stat:
+    path: "{{ cloud_memcached_version_path }}"
+  register: check_cloud_memcached_version
+
+- block:
+    - name: get current cloud memcached version
+      slurp:
+        src: "{{ cloud_memcached_version_path }}"
+      register: version
+
+    - set_fact:
+        memcached_version: "{{ version['content'] | b64decode }}"
+  when:
+    - check_cloud_memcached_version.stat.exists
+
+# 设置初始化版本
+- name: set current cloud memcached to -1 when not found
+  set_fact:
+    memcached_version: -1
+  when:
+    - not check_cloud_memcached_version.stat.exists
+
+- name: Running cloud-memcached container
+  shell: "docker run -it -d -p 11211:11211 -v /etc/localtime:/etc/localtime:ro -e MEMCACHED_USERNAME={{api_limits_account}} -e MEMCACHED_PASSWORD={{api_limits_pwd}} --name {{memcached_container_name}} {{ memcached_image_fullname }} memcached -m 64"
+  when:
+    - memcached_version < 1
+
+# 设置最新版本
+- name: set current cloud memcached version
+  copy:
+    content: "100"
+    dest: "{{ cloud_memcached_version_path }}"

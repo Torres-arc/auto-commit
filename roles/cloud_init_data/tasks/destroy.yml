@@ -1,0 +1,10 @@
+---
+
+# 删除目录
+- name: remove cloud_init_data
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ cloud_database_etc_path }}"
+    - "{{ cloud_database_version_path }}"

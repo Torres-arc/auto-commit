@@ -1,0 +1,8 @@
+---
+- name: Restart memcached container
+  become: true
+  docker_container:
+    name: "{{ memcached_container_name }}"
+    restart: true
+
+

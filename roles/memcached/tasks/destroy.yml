@@ -1,0 +1,16 @@
+---
+############
+# 删除容器，配置文件目录和挂在volume #
+############
+- name: remove {{ memcached_container_name }} container
+  docker_container:
+    name: "{{ memcached_container_name }}"
+    state: absent
+
+# 删除目录
+- name: remove cloud memcached file
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "/etc/cloud-memcached"

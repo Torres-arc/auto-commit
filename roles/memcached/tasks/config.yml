@@ -1,0 +1,15 @@
+---
+# 创建数据库脚本目录
+- name: ensure cloud memcached folder
+  file:
+    path: "{{ item }}"
+    recurse: true
+    state: directory
+    mode: "0770"
+  with_items:
+    - "/etc/cloud-memcached"
+
+# 拉取指定memcached镜像
+- name: pull memcached image
+  docker_image:
+    name: "{{ memcached_image_fullname }}"

@@ -1,0 +1,23 @@
+---
+##########
+# Docker #
+##########
+docker_registry: ''
+memcached_image_namespace: "cloud-service"
+memcached_image_name: "cloud-memcached"
+memcached_image_tag: "{{ cloud_service_memcached_tag }}"
+
+memcached_image_fullname: "\
+{{ docker_registry ~ '/' if docker_registry else '' }}\
+{{ memcached_image_namespace ~ '/' if memcached_image_namespace else '' }}\
+{{ memcached_image_name }}:\
+{{ memcached_image_tag }}"
+
+memcached_container_name: "cloud-memcached"
+
+cloud_memcached_version_path: "/etc/cloud-memcached/version"
+
+## keep same value in iam main.yml
+api_limits_account: memcache
+
+api_limits_pwd: ZJ0FsG12Cvr79rc
