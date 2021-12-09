@@ -1,0 +1,5 @@
+---
+- name: restart rabbitmq service
+  docker_container:
+    name: "{{ rabbitmq_container_name }}"
+    restart: true

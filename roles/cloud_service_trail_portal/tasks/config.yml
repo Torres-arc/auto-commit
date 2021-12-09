@@ -1,0 +1,18 @@
+---
+# 创建配置文件目录和数据文件目录
+- name: ensure cloud-service-trail-portal etc folder
+  file:
+    path: "{{ item }}"
+    recurse: true
+    state: directory
+  with_items:
+    - "{{ cloud_service_trail_portal_etc_path }}"
+
+# 拷贝nginx的配置文件
+# nginx的配置文件采用模版形式，注入变量
+- name: copying cloud_service_trail_portal nginx.conf
+  template:
+    src: nginx.conf.j2
+    dest: "{{ cloud_service_trail_portal_etc_path }}/nginx.conf"
+    mode: 0777
+  notify: restart cloud-service-trail-portal service
