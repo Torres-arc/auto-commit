@@ -23,3 +23,22 @@
   set_fact:
     cloud_iam_host: "{{ network_interface|address(ip_version=ip_version) }}"
 
+# 拷贝token文件
+- name: copy token files
+  copy:
+    src: "{{ item }}"
+    dest: "{{ item }}"
+    mode: 0777
+  with_items:
+    - "{{ cloud_iam_fernet_etc_path }}"
+    - "{{ cloud_iam_credential_etc_path }}"
+
+# 拷贝配置文件至指定目录
+- name: copy config files
+  template:
+    src: "{{ item.value.name }}"
+    dest: "{{ item.value.path }}"
+    mode: 0777
+  with_dict:
+    - "{{ cloud_iam_config_files }}"
+  notify: restart cloud_iam service

@@ -1,0 +1,56 @@
+---
+
+# 运行容器，初始化数据库 只在第一个节点运行
+- name: Bootstrap cloud iam database
+  docker_container:
+    command:  "keystone-manage db_sync"
+    name: "{{ cloud_iam_bootstrap_container_name }}"
+    image: "{{ cloud_iam_image_fullname }}"
+    pull: "{{ cloud_iam_image_force_pull }}"
+    user: root
+    network_mode: host
+    cleanup: true
+    detach: false
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - "{{ cloud_iam_log_path }}/:/var/log/kolla/keystone/"
+      - "{{ cloud_iam_etc_path }}/iam_enforcer.conf:/etc/keystone/iam_enforcer.conf:rw"
+      - "{{ cloud_iam_etc_path }}/keystone.conf:/etc/keystone/keystone.conf:rw"
+      - "{{ cloud_iam_etc_path }}/app_httpd.conf:/etc/httpd/conf.d/app_httpd.conf:rw"
+  when:
+    - inventory_hostname == cloud_iam_bootstrap_node
+
+# 运行容器，启动服务
+# 挂在部署节点中生成的认证文件，避免出现多节点一致性问题
+- name: Running cloud iam container
+  docker_container:
+    command: "httpd -DFOREGROUND"
+    name: "{{ cloud_iam_container_name }}"
+    image: "{{ cloud_iam_image_fullname }}"
+    pull: "{{ cloud_iam_image_force_pull }}"
+    user: root
+    network_mode: host
+    restart_policy: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - "{{ cloud_iam_log_path }}/:/var/log/kolla/keystone/"
+      - "{{ cloud_iam_etc_path }}/iam_enforcer.conf:/etc/keystone/iam_enforcer.conf:rw"
+      - "{{ cloud_iam_etc_path }}/keystone.conf:/etc/keystone/keystone.conf:rw"
+      - "{{ cloud_iam_etc_path }}/app_httpd.conf:/etc/httpd/conf.d/app_httpd.conf:rw"
+      - "{{ cloud_iam_fernet_etc_path }}:/etc/keystone/fernet-keys:rw"
+      - "{{ cloud_iam_credential_etc_path }}:/etc/keystone/credential-keys:rw"
+
+
+# 初始化容器，设置默认url和管理员密码，只在第一个节点运行
+- name: Bootstrap url for cloud iam container
+  command: "docker exec {{ cloud_iam_container_name }} bash -c 'keystone-manage bootstrap
+  --bootstrap-password {{ keystone_password }}  --bootstrap-admin-url {{ cloud_iam_admin_url }}
+  --bootstrap-internal-url {{ cloud_iam_internal_url }}
+  --bootstrap-public-url {{ cloud_iam_public_url }}
+  --bootstrap-region-id {{ cloud_iam_default_region_id }}' "
+  when:
+    - inventory_hostname == cloud_iam_bootstrap_node
+
+# 初始化容器，设置日志目录权限
+- name: Bootstrap Permission for cloud iam container
+  command: "docker exec {{ cloud_iam_container_name }} bash -c 'chmod -R 0777 /var/log/kolla/keystone/' "
