@@ -1,1 +1,59 @@
 ---
+# 创建数据库脚本目录
+- name: ensure cloud init etc folder
+  file:
+    path: "{{ item }}"
+    recurse: true
+    state: directory
+  with_items:
+    - "{{ cloud_database_etc_path }}"
+
+# 拷贝初始化文件
+- name: copy cloud sql files
+  copy:
+    src: "sql"
+    dest: "{{ cloud_database_etc_path }}/"
+
+# 获取当前版本
+- name: get current cloud database version file
+  stat:
+    path: "{{ cloud_database_version_path }}"
+  register: check_cloud_database_version
+
+- block:
+    - name: get current cloud database version
+      slurp:
+        src: "{{ cloud_database_version_path }}"
+      register: version
+
+    - set_fact:
+        database_version: "{{ version['content'] | b64decode }}"
+  when:
+    - check_cloud_database_version.stat.exists
+
+# 设置初始化版本
+- name: set current cloud database to -1 when not found
+  set_fact:
+    database_version: -1
+  when:
+    - not check_cloud_database_version.stat.exists
+
+# 导入初始化数据
+- name: import cloud sql files
+  mysql_db:
+    login_host: "{{ internal_vip_address }}"
+    login_user: "{{ database_user }}"
+    login_password: "{{ database_password }}"
+    login_port: "{{ mariadb_listen_port }}"
+    state: import
+    name: all
+    target: "{{ cloud_database_etc_path }}/sql/{{ item.1 }}"
+  with_indexed_items: "{{ cloud_sql_files }}"
+  when:
+    - item.0 >= database_version
+
+# 设置最新版本
+- name: set current cloud database version
+  copy:
+    content: "{{ cloud_sql_files|length }}"
+    dest: "{{ cloud_database_version_path }}"

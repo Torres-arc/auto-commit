@@ -1,0 +1,14 @@
+---
+############
+# common #
+############
+cloud_database_etc_path: "/etc/cloud-database-init"
+cloud_database_version_path: "{{ cloud_database_etc_path }}/database_version"
+
+############
+# database #
+############
+cloud_sql_files:
+  - 00_cloud_iam_init_data.sql
+  - 01_cloud_ecs_init_data.sql
+  - 02_cloud_rms_init_data.sql

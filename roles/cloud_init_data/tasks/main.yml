@@ -1,0 +1,5 @@
+---
+# 初始化数据库数据，只在节点1 运行一次，避免重复执行初始化数据
+- import_tasks: "init_database.yml"
+  delegate_to: "{{ ansible_play_hosts.0 }}"
+  run_once: true
