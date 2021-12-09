@@ -1,0 +1,7 @@
+---
+- name: restart cloud_ecs_api service
+  command: "docker restart {{ cloud_ecs_api_container_name }}"
+
+- name: restart cloud_ecs_engine service
+  command: "docker restart {{ cloud_ecs_engine_container_name }}"
+

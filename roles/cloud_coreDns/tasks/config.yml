@@ -1,0 +1,29 @@
+---
+# 设置监听地址
+- name: set dns host
+  set_fact:
+    dns_host: "{{ network_interface|address(ip_version=ip_version) }}"
+
+# 创建配置文件目录
+- name: ensure coreDns etc path
+  become: True
+  file:
+    path: "{{ item }}"
+    recurse: yes
+    state: directory
+    mode: 0777
+  with_items:
+    - "{{ cloud_coreDns_etc_path }}"
+
+# copy coredns file
+- name: copy coredns config file
+  template:
+    src: Corefile.j2
+    dest: "{{ cloud_coreDns_etc_path }}/Corefile"
+
+- name: copy coredns hosts file
+  template:
+    src: hosts.j2
+    dest: "{{ cloud_coreDns_etc_path }}/hosts"
+  notify:
+    - restart cloud-coredns service
