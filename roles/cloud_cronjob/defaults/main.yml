@@ -1,0 +1,8 @@
+---
+mariadb_listen_address: "{{ mariadb_listen_interface|address(ip_version=mariadb_ip_version) }}"
+mariadb_listen_port: 3306
+database_user: root
+database_password: pass
+mariadb_container_name: "mariadb"
+cronjob_etc_path: "/etc/cloud-cronjob"
+back_file_path: "/opt/data/mysql_backup/"
