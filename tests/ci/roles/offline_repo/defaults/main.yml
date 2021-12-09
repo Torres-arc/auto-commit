@@ -1,0 +1,68 @@
+---
+base_url: mirrors.tuna.tsinghua.edu.cn
+centos_base_url: "{{ 'mirrors.tuna.tsinghua.edu.cn/centos-altarch' if ansible_architecture == 'aarch64' else 'mirrors.tuna.tsinghua.edu.cn/centos' }}"
+
+# base_url: mirrors.aliyun.com
+
+epel_packages:
+  - jq
+  - htop
+  - fping
+  - iftop
+  - parallel
+  - python2-pip
+  - python2-crypto
+
+packages:
+  system:
+    - iptables-services
+    - MySQL-python
+  infra:
+    - bridge-utils
+    - createrepo
+    - docker-ce
+  client:
+    - mariadb
+  ops-tools:
+    - ansible
+    - bash-completion
+    - bind-utils
+    - curl
+    - dstat
+    - e2fsprogs
+    - ethtool
+    - findutils
+    - git
+    - httpd
+    - iotop
+    - iperf3
+    - ipmitool
+    - iproute
+    - lsof
+    - net-tools
+    - nmap-ncat
+    - numactl
+    - patch
+    - pciutils
+    - perf
+    - procps-ng
+    - psmisc
+    - strace
+    - sysstat
+    - tcpdump
+    - telnet
+    - tmux
+    - traceroute
+    - unzip
+    - vim-enhanced
+    - wget
+    - gdisk
+  openstack:
+    - python2-docker
+    - python2-jinja2
+    - python2-netaddr
+  others:
+    - audit
+    - libibverbs
+    - libmlx4
+    - lldpad

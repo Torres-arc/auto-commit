@@ -15,3 +15,39 @@
     repo_path={{ workspace }}/repo
     if [[ -e $repo_path ]]; then
       rm -rf $repo_path/*
+    fi
+
+- name: copy custom.repo file
+  template:
+    src: custom.repo
+    dest: "{{ workspace }}/yum.repos.d/custom.repo"
+
+- name: copy sync repo script
+  template:
+    src: sync-repo
+    dest: "{{ workspace }}/sync-repo"
+    mode: 0755
+
+- name: sync repo
+  docker_container:
+    name: "repo_sync_{{ lookup('env', 'ZUUL_REFNAME')|basename }}"
+    image: centos:7
+    detach: false
+    working_dir: /data/repo
+    env:
+      http_proxy: "{{ http_proxy|default(omit) }}"
+      https_proxy: "{{ https_proxy|default(omit) }}"
+    command:
+      - bash
+      - /usr/local/bin/sync-repo
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - "{{ workspace }}/yum.repos.d:/etc/yum.repos.d"
+      - "{{ workspace }}/sync-repo:/usr/local/bin/sync-repo"
+      - "{{ workspace }}/repo:/data/repo"
+
+- name: archive {{ workspace }}/repo folder
+  archive:
+    path: "{{ workspace }}/repo"
+    dest: "{{ workspace }}/dist/offline-repo.tar.gz"
+    format: gz

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -xe
+
+yum install -y yum-utils createrepo wget
+
+{% for name, package in packages.items() %}
+# {{ name }}
+repotrack {{ package|join(' ') }}
+{% endfor %}
+
+# download epel repackages
+repotrack --repoid epel {{ epel_packages|join(' ') }}
+
+createrepo .
+
+{# vim:ft=jinja2
+#}
