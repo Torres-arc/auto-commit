@@ -1,0 +1,31 @@
+---
+##########
+# Docker #
+##########
+# TODO(chenhui) docker_registry在这不生效，暂未明确原因！！！
+local_docker_registry: "localhost:4000"
+cloud_iam_fernet_image_namespace: "cloud-service"
+cloud_iam_fernet_image_name: "cloud-iam"
+cloud_iam_fernet_image_tag: "{{ cloud_service_iam_tag }}"
+
+cloud_iam_fernet_image_force_pull: true
+
+cloud_iam_fernet_image_fullname: "\
+{{ local_docker_registry ~ '/'}}\
+{{ cloud_iam_fernet_image_namespace ~ '/' if cloud_iam_fernet_image_namespace else '' }}\
+{{ cloud_iam_fernet_image_name }}:\
+{{ cloud_iam_fernet_image_tag }}"
+
+cloud_iam_fernet_container_name: "cloud-iam-fernet"
+
+############
+# keystone #
+############
+# keystone controller password
+keystone_fernet_user: "iamapi"
+keystone_fernet_group: "iamapi"
+
+# etc path
+cloud_iam_fernet_etc_path: "/etc/cloud-iam-fernet/fernet-keys/"
+cloud_iam_credential_etc_path: "/etc/cloud-iam-fernet/credential-keys/"
+

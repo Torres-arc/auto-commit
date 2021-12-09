@@ -1,0 +1,5 @@
+---
+- name: restart cloud-service-rms-portal service
+  docker_container:
+    name: "{{ cloud_service_rms_portal_container_name }}"
+    restart: true

@@ -1,0 +1,12 @@
+---
+# 创建配置文件目录
+- name: ensure etc path
+  become: True
+  file:
+    path: "{{ item }}"
+    recurse: yes
+    state: directory
+    mode: 0777
+  with_items:
+    - "{{ cloud_iam_fernet_etc_path }}"
+    - "{{ cloud_iam_credential_etc_path }}"

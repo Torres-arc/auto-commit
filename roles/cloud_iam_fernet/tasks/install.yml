@@ -1,0 +1,32 @@
+---
+
+# 运行容器，生成fernet_setup文件，作为配置文件下发到安装节点中
+- name: Generate fernet_setup file
+  run_once: true
+  docker_container:
+    command:  "keystone-manage fernet_setup --keystone-user {{ keystone_fernet_user }} --keystone-group {{ keystone_fernet_group }}"
+    name: "{{ cloud_iam_fernet_container_name }}"
+    image: "{{ cloud_iam_fernet_image_fullname }}"
+    pull: "{{ cloud_iam_fernet_image_force_pull }}"
+    user: "{{ keystone_fernet_user }}"
+    network_mode: host
+    cleanup: true
+    detach: false
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - "{{ cloud_iam_fernet_etc_path }}/:/etc/keystone/fernet-keys:rw"
+
+- name: Generate fernet_setup file
+  run_once: true
+  docker_container:
+    command:  "keystone-manage credential_setup --keystone-user {{ keystone_fernet_user }} --keystone-group {{ keystone_fernet_user }}"
+    name: "{{ cloud_iam_fernet_container_name }}"
+    image: "{{ cloud_iam_fernet_image_fullname }}"
+    pull: "{{ cloud_iam_fernet_image_force_pull }}"
+    user: root
+    network_mode: host
+    cleanup: true
+    detach: false
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - "{{ cloud_iam_credential_etc_path }}/:/etc/keystone/credential-keys:rw"
