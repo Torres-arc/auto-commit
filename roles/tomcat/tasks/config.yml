@@ -1,0 +1,28 @@
+---
+- name: ensure etc folder
+  file:
+    path: "{{ item }}"
+    recurse: true
+    state: directory
+  with_items:
+    - "{{ tomcat_etc_path }}"
+
+# 设置监听地址
+- name: set vpc host
+  set_fact:
+    vpc_host: "{{ network_interface|address(ip_version=ip_version) }}"
+
+# 设置rabbitmq的url
+- name: set rabbitmq url
+  set_fact:
+    rabbitmq_url: "{% for host in groups.rabbitmq %}{{ hostvars[host]['rabbitmq_listen_interface'] |address(ip_version=ip_version, hostname=host)|ipwrap }}:{{ rabbitmq_listen_port }}{% if not loop.last %},{% endif %}{% endfor %}"
+
+# 拷贝配置文件至指定目录
+- name: copy config files
+  template:
+    src: "{{ item.value.name }}"
+    dest: "{{ item.value.path }}"
+    mode: 0777
+  with_dict:
+    - "{{ cloud_vpc_config_files }}"
+  notify: restart tomcat service

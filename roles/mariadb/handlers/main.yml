@@ -1,0 +1,9 @@
+---
+- name: restart mariadb service
+  include_tasks: 'restart.yml'
+  vars:
+    restart: true
+    prefix: ""
+  when:
+    - ansible_play_hosts.index(inventory_hostname) == item|int
+  with_sequence: "start=0 count={{ ansible_play_hosts|length }}"

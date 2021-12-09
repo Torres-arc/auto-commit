@@ -1,0 +1,12 @@
+---
+- name: remove {{ tomcat_container_name }} container
+  docker_container:
+    name: "{{ tomcat_container_name }}"
+    state: absent
+
+- name: remove {{ tomcat_container_name }} etc folder
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ tomcat_etc_path }}"

@@ -1,0 +1,4 @@
+---
+- name: Running cloud-vpc container
+  docker_container:
+    name: "{{ tomcat_container_name }}"
