@@ -137,3 +137,112 @@ prometheus_rule_files:
 #   - targets:
 #       - 10.10.0.100:9090
 #     labels:
+#       cluster_id: sh-caas
+prometheus_federate_configs: []
+
+################
+# alertmanager #
+################
+alertmanager_image_force_pull: "{{ docker_force_pull }}"
+alertmanager_cpuset_cpus: "{{ default_cpuset_cpus }}"
+
+alertmanager_ip_version: "{{ ip_version }}"
+alertmanager_listen_interface: "{{ network_interface }}"
+alertmanager_listen_port: 9093
+alertmanager_cluster_interface: "{{ network_interface }}"
+alertmanager_cluster_port: 9094
+
+alertmanager_webhook: ""
+
+#################
+# node_exporter #
+#################
+node_exporter_image_force_pull: "{{ docker_force_pull }}"
+node_exporter_cpuset_cpus: "{{ default_cpuset_cpus }}"
+
+node_exporter_ip_version: "{{ ip_version }}"
+node_exporter_listen_interface: "{{ network_interface }}"
+node_exporter_listen_port: 9100
+
+#####################
+# blackbox_exporter #
+#####################
+blackbox_exporter_image_force_pull: "{{ docker_force_pull }}"
+blackbox_exporter_cpuset_cpus: "{{ default_cpuset_cpus }}"
+
+blackbox_exporter_ip_version: "{{ ip_version }}"
+blackbox_exporter_listen_interface: "{{ network_interface }}"
+blackbox_exporter_listen_port: 9115
+
+############
+# telegraf #
+############
+telegraf_ip_version: "{{ ip_version }}"
+telegraf_listen_interface: "{{ network_interface }}"
+telegraf_listen_port: 9126
+
+# haproxy_config
+haproxy_stats_port: 1984
+haproxy_stats_user: "admin"
+haproxy_stats_ip: "127.0.0.1"
+
+# mysqld
+mysqld_port: "3306"
+mysqld_username: "root"
+mysqld_host: "{{ mariadb_listen_interface|address(ip_version=mariadb_ip_version) }}"
+mysqld_password: "{{ database_password }}"
+
+########################
+# haproxy & keepalived #
+########################
+haproxy_listen_interface: "{{ network_interface }}"
+haproxy_ip_version: "{{ ip_version }}"
+haproxy_image_force_pull: "{{ docker_force_pull }}"
+
+keepalived_image_force_pull: "{{ docker_force_pull }}"
+keepalived_virtual_router_id: 51
+keepalived_traffic_mode: "unicast"
+
+############
+# rabbitmq #
+############
+rabbitmq_ip_version: "{{ ip_version }}"
+rabbitmq_listen_interface: "{{ network_interface }}"
+rabbitmq_listen_port: 5672
+rabbitmq_cluster_port: 25672
+rabbitmq_management_port: 15672
+rabbitmq_image_force_pull: "{{ docker_force_pull }}"
+rabbitmq_user: cloud-service
+
+###########
+# mariadb #
+###########
+mariadb_ip_version: "{{ ip_version }}"
+mariadb_listen_interface: "{{ network_interface }}"
+mariadb_listen_port: 3306
+database_user: root
+database_max_timeout: "120"
+mariadb_image_force_pull: "{{ docker_force_pull }}"
+
+##########
+# tomcat #
+##########
+tomcat_ip_version: "{{ ip_version }}"
+tomcat_listen_interface: "{{ network_interface }}"
+tomcat_listen_port: 8080
+tomcat_username: admin
+tomcat_listen_address: "{{ tomcat_listen_interface|address(ip_version=tomcat_ip_version) }}"
+tomcat_image_force_pull: "{{ docker_force_pull }}"
+
+###########
+# memcached #
+###########
+memcached_listen_port: 11211
+memcached_max_memory: "1024"
+memcached_version: "1.6.9"
+
+##########
+# java project #
+##########
+# 日志级别 debug | info | warn | error
+log_level: info

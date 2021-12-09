@@ -1,0 +1,9 @@
+---
+- hosts: all
+  vars:
+    yum_disablerepo: "*"
+    yum_enablerepo: local
+    cloud_service_globals_yml: /etc/cloud-service/globals.yml
+  #读取外部配置文件这里的配置似乎无效，准备repo，关闭防火墙之类的
+  tasks:
+    # 读取外部配置文件内容，并注入
