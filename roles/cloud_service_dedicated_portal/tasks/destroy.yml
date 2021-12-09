@@ -2,3 +2,15 @@
 ############
 # 删除容器，配置文件目录和挂在volume #
 ############
+
+- name: remove {{ cloud_service_dedicated_portal_container_name }} container
+  docker_container:
+    name: "{{ cloud_service_dedicated_portal_container_name }}"
+    state: absent
+
+- name: remove {{ cloud_service_dedicated_portal_container_name }} etc & data folder
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ cloud_service_dedicated_portal_etc_path }}"
