@@ -527,3 +527,153 @@ sender_pwd = {{ email_sender_pwd }}
 #template_file = default_catalog.templates
 
 # Entry point for the catalog driver in the `keystone.catalog` namespace.
+# Keystone provides a `sql` option (which supports basic CRUD operations
+# through SQL), a `templated` option (which loads the catalog from a templated
+# catalog file on disk), and a `endpoint_filter.sql` option (which supports
+# arbitrary service catalogs per project). (string value)
+#driver = sql
+
+# Toggle for catalog caching. This has no effect unless global caching is
+# enabled. In a typical deployment, there is no reason to disable this.
+# (boolean value)
+#caching = true
+
+# Time to cache catalog data (in seconds). This has no effect unless global and
+# catalog caching are both enabled. Catalog data (services, endpoints, etc.)
+# typically does not change frequently, and so a longer duration than the
+# global default may be desirable. (integer value)
+#cache_time = <None>
+
+# Maximum number of entities that will be returned in a catalog collection.
+# There is typically no reason to set this, as it would be unusual for a
+# deployment to have enough services or endpoints to exceed a reasonable limit.
+# (integer value)
+#list_limit = <None>
+
+
+[cors]
+
+#
+# From oslo.middleware
+#
+
+# Indicate whether this resource may be shared with the domain received in the
+# requests "origin" header. Format: "<protocol>://<host>[:<port>]", no trailing
+# slash. Example: https://horizon.example.com (list value)
+#allowed_origin = <None>
+
+# Indicate that the actual request can include user credentials (boolean value)
+#allow_credentials = true
+
+# Indicate which headers are safe to expose to the API. Defaults to HTTP Simple
+# Headers. (list value)
+#expose_headers = X-Auth-Token,X-Openstack-Request-Id,X-Subject-Token,Openstack-Auth-Receipt
+
+# Maximum cache age of CORS preflight requests. (integer value)
+#max_age = 3600
+
+# Indicate which methods can be used during the actual request. (list value)
+#allow_methods = GET,PUT,POST,DELETE,PATCH
+
+# Indicate which header field names may be used during the actual request.
+# (list value)
+#allow_headers = X-Auth-Token,X-Openstack-Request-Id,X-Subject-Token,X-Project-Id,X-Project-Name,X-Project-Domain-Id,X-Project-Domain-Name,X-Domain-Id,X-Domain-Name,Openstack-Auth-Receipt
+
+
+[credential]
+
+#
+# From keystone
+#
+
+# Entry point for the credential backend driver in the `keystone.credential`
+# namespace. Keystone only provides a `sql` driver, so there's no reason to
+# change this unless you are providing a custom entry point. (string value)
+#driver = sql
+
+# Entry point for credential encryption and decryption operations in the
+# `keystone.credential.provider` namespace. Keystone only provides a `fernet`
+# driver, so there's no reason to change this unless you are providing a custom
+# entry point to encrypt and decrypt credentials. (string value)
+#provider = fernet
+
+# Directory containing Fernet keys used to encrypt and decrypt credentials
+# stored in the credential backend. Fernet keys used to encrypt credentials
+# have no relationship to Fernet keys used to encrypt Fernet tokens. Both sets
+# of keys should be managed separately and require different rotation policies.
+# Do not share this repository with the repository used to manage keys for
+# Fernet tokens. (string value)
+#key_repository = /etc/keystone/credential-keys/
+
+# Toggle for caching only on retrieval of user credentials. This has no effect
+# unless global caching is enabled. (boolean value)
+#caching = true
+
+# Time to cache credential data in seconds. This has no effect unless global
+# caching is enabled. (integer value)
+#cache_time = <None>
+
+# The length of time in minutes for which a signed EC2 or S3 token request is
+# valid from the timestamp contained in the token request. (integer value)
+#auth_ttl = 15
+
+# Maximum number of credentials a user is permitted to create. A value of -1
+# means unlimited. If a limit is not set, users are permitted to create
+# credentials at will, which could lead to bloat in the keystone database or
+# open keystone to a DoS attack. (integer value)
+#user_limit = -1
+
+
+[database]
+
+#
+# From oslo.db
+#
+
+# If True, SQLite uses synchronous mode. (boolean value)
+#sqlite_synchronous = true
+
+# The back end to use for the database. (string value)
+# Deprecated group/name - [DEFAULT]/db_backend
+#backend = sqlalchemy
+
+# The SQLAlchemy connection string to use to connect to the database. (string
+# value)
+# Deprecated group/name - [DEFAULT]/sql_connection
+# Deprecated group/name - [DATABASE]/sql_connection
+# Deprecated group/name - [sql]/connection
+#connection = <None>
+
+
+# The SQLAlchemy connection string to use to connect to the slave database.
+# (string value)
+#slave_connection = <None>
+
+# The SQL mode to be used for MySQL sessions. This option, including the
+# default, overrides any server-set SQL mode. To use whatever SQL mode is set
+# by the server configuration, set this to no value. Example: mysql_sql_mode=
+# (string value)
+#mysql_sql_mode = TRADITIONAL
+
+# If True, transparently enables support for handling MySQL Cluster (NDB).
+# (boolean value)
+#mysql_enable_ndb = false
+
+# Connections which have been present in the connection pool longer than this
+# number of seconds will be replaced with a new one the next time they are
+# checked out from the pool. (integer value)
+# Deprecated group/name - [DATABASE]/idle_timeout
+# Deprecated group/name - [database]/idle_timeout
+# Deprecated group/name - [DEFAULT]/sql_idle_timeout
+# Deprecated group/name - [DATABASE]/sql_idle_timeout
+# Deprecated group/name - [sql]/idle_timeout
+#connection_recycle_time = 3600
+
+# Maximum number of SQL connections to keep open in a pool. Setting a value of
+# 0 indicates no limit. (integer value)
+# Deprecated group/name - [DEFAULT]/sql_max_pool_size
+# Deprecated group/name - [DATABASE]/sql_max_pool_size
+#max_pool_size = 5
+
+# Maximum number of database connection retries during startup. Set to -1 to
+# specify an infinite retry count. (integer value)
