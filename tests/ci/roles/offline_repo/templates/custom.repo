@@ -26,3 +26,76 @@ baseurl=http://{{ centos_base_url }}/$releasever/rt/$basearch/
 gpgcheck=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 {% endif %}
+
+########
+# EPEL #
+########
+[epel]
+name=Extra Packages for Enterprise Linux 7 - $basearch
+# baseurl=http://download.fedoraproject.org/pub/epel/7/$basearch
+baseurl=http://{{ base_url }}/epel/7/$basearch
+enabled=0
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+
+{% if ansible_architecture != 'aarch64' %}
+##############
+# CentOS 76 #
+##############
+# This is mainly used for old kernel
+[base-76]
+name=CentOS-$releasever - Base
+baseurl=http://{{ centos_base_url }}-vault/7.6.1810/os/$basearch/
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+[updates-76]
+name=CentOS-$releasever - Updates
+baseurl=http://{{ centos_base_url }}-vault/7.6.1810/updates/$basearch/
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+[extras-76]
+name=CentOS-$releasever - Extras
+baseurl=http://{{ centos_base_url }}-vault/7.6.1810/extras/$basearch/
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+{% endif %}
+
+###############
+# Ansible 2.9 #
+###############
+[ansible]
+name=ansible
+baseurl=https://{{ centos_base_url }}/7/configmanagement/$basearch/ansible-29/
+gpgcheck=0
+enabled=1
+
+#############
+# Docker CE #
+#############
+[docker-ce]
+name=docker-ce
+baseurl=https://{{ base_url }}/docker-ce/linux/centos/7/$basearch/stable
+enabled=1
+gpgcheck=0
+gpgkey=https://download.docker.com/linux/centos/gpg
+
+###################
+# OpenStack Train #
+###################
+[openstack-train]
+name=openstack train
+baseurl=https://{{ centos_base_url }}/7/cloud/$basearch/openstack-train/
+gpgcheck=0
+enabled=1
+
+###########
+# qemu-ev #
+###########
+[centos-qemu-ev]
+name=CentOS-$releasever - QEMU EV
+baseurl=https://{{ centos_base_url }}/$releasever/virt/$basearch/kvm-common/
+gpgcheck=0
+enabled=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-Virtualization

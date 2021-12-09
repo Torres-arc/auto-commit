@@ -1,0 +1,77 @@
+---
+- hosts: localhost
+  gather_facts: true
+  vars:
+    tarballs_site: http://tarballs.99cloud.com.cn
+    workspace: "{{ playbook_dir|dirname }}"
+    build_path: "{{ workspace }}/build/"
+    dist_path: "{{ workspace }}/dist"
+
+    registry_path: "{{ build_path }}/registry"
+    registry_port: 6021
+    registry_name: "registry_{{ registry_port }}"
+    registry_archive_path: "{{ build_path }}/docker-registry.tar"
+
+    enable_cleanup: true
+    prom_imags:
+      - prom/prometheus:latest
+      - prom/alertmanager:latest
+      - prom/node-exporter:latest
+      - prom/blackbox-exporter:v0.15.0
+      - telegraf:latest
+
+  tasks:
+    - name: install skopeo
+      yum:
+        name: skopeo
+
+    - name: ensure build folder
+      file:
+        path: "{{ item }}"
+        state: directory
+      with_items:
+        - "{{ build_path }}"
+        - "{{ dist_path }}"
+        - "{{ registry_path }}"
+
+    - block:
+        - name: download files
+          get_url:
+            url: "{{ tarballs_site }}/{{ item.src }}"
+            dest: "{{ build_path }}{{ item.dest }}"
+          with_items:
+            # cloud-service-deploy
+            - src: "cloud-service/cloud-service-deploy/offline-repo-master.tar.gz"
+              dest: repo.tar.gz
+
+            - src: "cloud-service/cloud-service-deploy/cloud-service-deploy-master.tar.gz"
+              dest: cloud-service-deploy.tar.gz
+
+            - src: "cloud-service/cloud-service-deploy/{{ ansible_architecture }}/cloud-service-deploy-image-master.tar.gz"
+              dest: cloud-service-deploy-image.tar.gz
+
+        # prepare docker registry
+        - name: start docker registry
+          import_role:
+            name: docker_registry
+          tags:
+            - registry
+
+        # push image into registry
+        - name: load the tar.gz info registry
+          shell: |
+            #!/bin/bash
+            image=$(docker load -i {{ build_path }}/{{ item.filename }}|awk '{print $3}')
+            docker tag $image 127.0.0.1:{{ registry_port }}/{{ item.image_name }}
+            docker push 127.0.0.1:{{ registry_port }}/{{ item.image_name }}
+          with_items:
+            - filename: cloud-service-deploy-image.tar.gz
+              image_name: cloud-service/common:0.0.1
+
+        - name: pull prom image and push to registry
+          shell: |
+            #!/bin/bash
+            set -e
+            docker pull {{ item }}
+            docker tag {{ item }} 127.0.0.1:{{ registry_port }}/{{ item }}
+            docker push 127.0.0.1:{{ registry_port }}/{{ item }}
