@@ -7,3 +7,153 @@
   #读取外部配置文件这里的配置似乎无效，准备repo，关闭防火墙之类的
   tasks:
     # 读取外部配置文件内容，并注入
+    - name: "include {{ cloud_service_globals_yml }} file"
+      include_vars:
+        file: "{{ cloud_service_globals_yml }}"
+      tags:
+        - always
+
+    - name: prepare http local repo
+      import_role:
+        name: httprepo
+      tags:
+        - repo
+
+    - name: disable firewalld
+      import_role:
+        name: disable_firewalld
+      tags:
+        - firewalld
+        - os
+
+    - name: disable selinux
+      import_role:
+        name: disable_selinux
+      tags:
+        - selinux
+        - os
+# 安装包
+    - name: install required packages
+      import_role:
+        name: install_packages
+      tags:
+        - package
+        - os
+
+    - name: config docker-ce
+      import_role:
+        name: docker
+      tags:
+        - docker
+
+- hosts: all
+  # 复制deploy节点的/ect/hosts文件到worker节点
+  tasks:
+    - name: copy ect hosts
+      import_role:
+        name: push_etc_hosts
+  # 复制证书到worker节点
+    - name: copy certificates
+      import_role:
+        name: copy_certifications
+      when:
+        - enable_tls | bool
+# 从这里开始真正的启动项目所需要的容器之类的
+# 安装 haproxy 并启动
+- hosts: haproxy
+  tags:
+    - haproxy
+  tasks:
+    - name: install haproxy
+      import_role:
+        name: haproxy
+        tasks_from: upgrade.yml
+# 安装 rabbitmq 并启动
+- hosts: rabbitmq
+  tasks:
+    - name: install rabbitmq
+      import_role:
+        name: rabbitmq
+        tasks_from: upgrade.yml
+      tags:
+        - rabbitmq
+# 安装 mariadb 并启动
+- hosts: mariadb
+  tags:
+    - mariadb
+  tasks:
+    - name: install mariadb
+      import_role:
+        name: mariadb
+        tasks_from: upgrade.yml
+
+# 配置定时备份mysql的定时任务
+- hosts: mariadb
+  tags:
+    - cloud_cronjob
+  tasks:
+    - name: config backup database
+      import_role:
+        name: cloud_cronjob
+        tasks_from: upgrade.yml
+
+# cloud-vpc vpc项目放第一个，能执行python系数据库初始化脚本
+- hosts: tomcat
+  tasks:
+    - name: install tomcat
+      import_role:
+        name: tomcat
+        tasks_from: upgrade.yml
+      tags: tomcat
+
+# 在task：cloud-iam之前，生成fernet_setup认证文件，作为配置文件下发到安装节点中，
+# 避免出现多节点的一致性问题
+- hosts: localhost
+  tags:
+    - cloud_iam_fernet
+  vars:
+    cloud_service_globals_yml: /etc/cloud-service/globals.yml
+  tasks:
+    - name: "include {{ cloud_service_globals_yml }} file"
+      include_vars:
+        file: "{{ cloud_service_globals_yml }}"
+
+    - name: install cloud cloud iam fernet
+      import_role:
+        name: cloud_iam_fernet
+        tasks_from: upgrade.yml
+
+# Memcached的docker部署
+- hosts: cloud_memcached
+  tags:
+    - cloud_memcached
+  vars:
+    cloud_service_globals_yml: /etc/cloud-service/globals.yml
+  tasks:
+    - name: "include {{ cloud_service_globals_yml }} file"
+      include_vars:
+        file: "{{ cloud_service_globals_yml }}"
+
+    - name: install cloud memcached
+      import_role:
+        name: memcached
+        tasks_from: upgrade.yml
+
+# IAM的docker部署
+- hosts: cloud_iam
+  tags:
+    - cloud_iam
+  vars:
+    cloud_service_globals_yml: /etc/cloud-service/globals.yml
+  tasks:
+    - name: "include {{ cloud_service_globals_yml }} file"
+      include_vars:
+        file: "{{ cloud_service_globals_yml }}"
+
+    - name: install cloud iam
+      import_role:
+        name: cloud_iam
+        tasks_from: upgrade.yml
+
+
+# RMS的docker部署
