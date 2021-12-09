@@ -16,3 +16,72 @@ cloud_iam_image_fullname: "\
 {{ cloud_iam_image_tag }}"
 
 cloud_iam_container_name: "cloud-iam"
+cloud_iam_bootstrap_container_name: "cloud-iam-bootstrap"
+
+############
+# database #
+############
+cloud_iam_database_name: "keystone"
+
+############
+# keystone #
+############
+# keystone controller url
+cloud_iam_admin_url: "http://{{ internal_vip_address }}:{{ internal_iam_admin_port }}/v3/"
+cloud_iam_internal_url: "http://{{ internal_vip_address }}:{{ internal_iam_public_port }}/v3/"
+cloud_iam_public_url: "http://{{ internal_vip_address }}:{{ internal_iam_public_port }}/v3/"
+cloud_iam_default_region_id: "RegionOne"
+
+# keystone controller password
+keystone_password: ZJ0FsG12Cvr79rcW3wyg69BSmarlkmXulqtF6Efz
+keystone_user: "iamapi"
+keystone_group: "iamapi"
+
+############
+# common #
+############
+# config files
+cloud_iam_config_files:
+  app_httpd:
+    name: app_httpd.conf.j2
+    path: "{{ cloud_iam_etc_path }}/app_httpd.conf"
+  iam-enforcer-conf:
+    name: iam_enforcer.conf.j2
+    path: "{{ cloud_iam_etc_path }}/iam_enforcer.conf"
+  keystone-conf:
+    name: keystone.conf.j2
+    path: "{{ cloud_iam_etc_path }}/keystone.conf"
+
+# etc && data dir
+cloud_iam_etc_path: "/etc/{{ cloud_iam_container_name }}"
+cloud_iam_log_path: "/var/log/{{ cloud_iam_container_name }}"
+cloud_iam_fernet_etc_path: "/etc/cloud-iam-fernet/fernet-keys/"
+cloud_iam_credential_etc_path: "/etc/cloud-iam-fernet/credential-keys/"
+
+############
+# rabbitmq #
+############
+
+iam_rabbitmq_url: "{% for host in groups.rabbitmq %}{{ rabbitmq_user }}:{{ rabbitmq_password }}@{{ hostvars[host]['rabbitmq_listen_interface'] |address(ip_version=ip_version, hostname=host)|ipwrap }}:{{ rabbitmq_listen_port }}{% if not loop.last %},{% endif %}{% endfor %}"
+
+
+############
+# Sql init #
+############
+sql_files:
+  - 00_cloud_iam_init_ddl.sql
+
+############
+# api limits#
+############
+api_limits: 2000
+api_limits_server: "{% for host in groups.cloud_memcached %}{{ hostvars[host]['internal_interface'] |address(ip_version=ip_version, hostname=host)|ipwrap }}:11211{% if not loop.last %},{% endif %}{% endfor %}"
+api_limits_account: memcache
+api_limits_pwd: ZJ0FsG12Cvr79rc
+
+
+############
+# Email Sender stmp #
+############
+email_sender_account: 917860070@qq.com
+email_sender_pwd: gpokrxfvqbjxbeag

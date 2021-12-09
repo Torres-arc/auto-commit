@@ -1,0 +1,79 @@
+[DEFAULT]
+transport_url = rabbit://{{ iam_rabbitmq_url }}
+
+[trail]
+trail_enabled = True
+exchange = com.mec.trail.exchange
+routing_key = com.mec.trail.routing
+transport_url = rabbit://{{ iam_rabbitmq_url }}
+
+[database]
+connection = mysql+pymysql://{{ database_user }}:{{ database_password }}@{{ internal_vip_address }}:{{ mariadb_listen_port }}/{{ cloud_iam_database_name }}
+
+[api_limits]
+servers = {{ api_limits_server }}
+hints_limit = {{ api_limits }}
+account = {{ api_limits_account}}
+pwd = {{ api_limits_pwd}}
+
+[resource_management]
+endpoint=http://{{ internal_vip_address }}:{{ internal_rms_port }}
+
+[quota]
+user_count=50
+group_count=20
+iam_user_accesskey_count=2
+root_user_accesskey_count=10
+custom_policy_count=5
+custom_policy_characters_count=2048
+
+[email]
+sender = {{ email_sender_account }}
+sender_pwd = {{ email_sender_pwd }}
+#
+# From keystone
+#
+
+# Using this feature is *NOT* recommended. Instead, use the `keystone-manage
+# bootstrap` command. The value of this option is treated as a "shared secret"
+# that can be used to bootstrap Keystone through the API. This "token" does not
+# represent a user (it has no identity), and carries no explicit authorization
+# (it effectively bypasses most authorization checks). If set to `None`, the
+# value is ignored and the `admin_token` middleware is effectively disabled.
+# (string value)
+#admin_token = <None>
+
+# The base public endpoint URL for Keystone that is advertised to clients
+# (NOTE: this does NOT affect how Keystone listens for connections). Defaults
+# to the base host URL of the request. For example, if keystone receives a
+# request to `http://server:5000/v3/users`, then this will option will be
+# automatically treated as `http://server:5000`. You should only need to set
+# option if either the value of the base URL contains a path that keystone does
+# not automatically infer (`/prefix/v3`), or if the endpoint should be found on
+# a different host. (uri value)
+#public_endpoint = <None>
+
+# Maximum depth of the project hierarchy, excluding the project acting as a
+# domain at the top of the hierarchy. WARNING: Setting it to a large value may
+# adversely impact performance. (integer value)
+#max_project_tree_depth = 5
+
+# Limit the sizes of user & project ID/names. (integer value)
+#max_param_size = 64
+
+# Similar to `[DEFAULT] max_param_size`, but provides an exception for token
+# values. With Fernet tokens, this can be set as low as 255. (integer value)
+#max_token_size = 255
+
+# The maximum number of entities that will be returned in a collection. This
+# global limit may be then overridden for a specific driver, by specifying a
+# list_limit in the appropriate section (for example, `[assignment]`). No limit
+# is set by default. In larger deployments, it is recommended that you set this
+# to a reasonable number to prevent operations like listing all users and
+# projects from placing an unnecessary load on the system. (integer value)
+#list_limit = <None>
+
+# If set to true, strict password length checking is performed for password
+# manipulation. If a password exceeds the maximum length, the operation will
+# fail with an HTTP 403 Forbidden error. If set to false, passwords are
+# automatically truncated to the maximum length. (boolean value)
