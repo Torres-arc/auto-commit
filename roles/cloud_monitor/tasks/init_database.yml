@@ -1,0 +1,16 @@
+---
+- name: copy sql files
+  copy:
+    src: "sql"
+    dest: "{{ cloud_monitor_etc_path }}/"
+
+- name: import sql files
+  mysql_db:
+    login_host: "{{ internal_vip_address }}"
+    login_user: "{{ database_user }}"
+    login_password: "{{ database_password }}"
+    login_port: "{{ mariadb_listen_port }}"
+    state: import
+    name: all
+    target: "{{ cloud_monitor_etc_path }}/sql/{{ item.1 }}"
+  with_indexed_items: "{{ sql_files }}"

@@ -1,0 +1,17 @@
+---
+# 创建配置文件目录和数据文件目录
+- name: ensure cloud monitor log folder
+  become: True
+  file:
+    path: "{{ item }}"
+    recurse: yes
+    state: directory
+    mode: 0777
+  with_items:
+    - "{{ cloud_monitor_log_path }}"
+    - "{{ cloud_monitor_etc_path }}"
+
+# 设置监听地址
+- name: set monitor host
+  set_fact:
+    monitor_host: "{{ network_interface|address(ip_version=ip_version) }}"

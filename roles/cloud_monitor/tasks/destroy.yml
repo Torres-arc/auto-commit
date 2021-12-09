@@ -1,0 +1,8 @@
+---
+############
+# 删除容器，数据目录 #
+############
+- name: remove {{ cloud_monitor_container_name }} container
+  docker_container:
+    name: "{{ cloud_monitor_container_name }}"
+    state: absent

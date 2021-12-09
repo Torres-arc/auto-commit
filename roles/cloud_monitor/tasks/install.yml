@@ -1,0 +1,21 @@
+---
+- name: Running cloud-monitor container
+  docker_container:
+    name: "{{ cloud_monitor_container_name }}"
+    image: "{{ cloud_monitor_image_fullname }}"
+    pull: "{{ cloud_monitor_image_force_pull }}"
+    user: root
+    network_mode: host
+    restart_policy: always
+    env:
+      IAM_HOST: "{{ internal_vip_address }}"
+      IAM_PORT: "{{ internal_iam_port }}"
+      RMS_HOST: "{{ internal_vip_address }}"
+      RMS_PORT: "{{ internal_rms_port }}"
+      SERVER_ADDRESS: "{{ monitor_host }}"
+      SERVER_PORT: "{{ internal_monitor_port }}"
+      LOG_LEVEL: "{{ log_level }}"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/pki:/etc/pki:ro
+      - "{{ cloud_monitor_log_path }}:/usr/app/log:rw"
