@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- The contents of this file will be loaded for each web application -->
+<Context>
+  <Resource name="jdbc/cloud" auth="Container" type="javax.sql.DataSource"
+    url="jdbc:mariadb:sequential://{{ internal_vip_address | ipwrap }}:{{ mariadb_listen_port }}/cloud" driverClassName="org.mariadb.jdbc.Driver"
+    username="{{ database_user }}" password="{{ database_password }}"
+    factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+    maxActive="50"
+    maxIdle="20"
+    testWhileIdle="true" />
+
+  <Resource name="jdbc/itops" auth="Container" type="javax.sql.DataSource"
+    url="jdbc:mariadb:sequential://{{ internal_vip_address | ipwrap }}:{{ mariadb_listen_port }}/itops" driverClassName="org.mariadb.jdbc.Driver"
+    username="{{ database_user }}" password="{{ database_password }}"
+    factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+    maxActive="50"
+    maxIdle="20"
+    testWhileIdle="true" />
+
+  <Resource name="jdbc/it_mas" auth="Container" type="javax.sql.DataSource"
+    url="jdbc:mariadb:sequential://{{ internal_vip_address | ipwrap }}:{{ mariadb_listen_port }}/it_mas" driverClassName="org.mariadb.jdbc.Driver"
+    username="{{ database_user }}" password="{{ database_password }}"
+    factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+    maxActive="50"
+    maxIdle="20"
+    testWhileIdle="true"  />
+
+  <!-- Default set of monitored resources -->
+  <WatchedResource>WEB-INF/web.xml</WatchedResource>
+
+</Context>

@@ -1,0 +1,5 @@
+---
+- name: restart tomcat service
+  docker_container:
+    name: "{{ tomcat_container_name }}"
+    restart: true
