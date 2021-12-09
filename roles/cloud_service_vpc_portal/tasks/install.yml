@@ -1,0 +1,12 @@
+---
+- name: Running cloud_service_vpc_portal_container
+  docker_container:
+    name: "{{ cloud_service_vpc_portal_container_name }}"
+    image: "{{ cloud_service_vpc_portal_image_fullname }}"
+    pull: "{{ cloud_service_vpc_portal_image_force_pull }}"
+    user: root
+    network_mode: host
+    restart_policy: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - "{{ cloud_service_vpc_portal_etc_path }}/nginx.conf:/etc/nginx/nginx.conf:rw"

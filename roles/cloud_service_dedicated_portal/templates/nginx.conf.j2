@@ -77,3 +77,19 @@ http {
 
         server_name _;
 
+        location / {
+            add_header "Access-Control-Allow-Origin" *;
+            # First attempt to serve request as file, then
+            # as directory, then fall back to displaying a 404.
+            try_files $uri $uri/ /index.html;
+        }
+
+        location /ecs-api {
+          proxy_pass {{ cloud_service_portal_internal_ecs }};
+        }
+
+        location /rms-api {
+          proxy_pass {{ cloud_service_portal_internal_rms }};
+        }
+    }
+}
