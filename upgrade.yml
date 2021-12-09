@@ -307,3 +307,68 @@
   tasks:
     - name: "include {{ cloud_service_globals_yml }} file"
       include_vars:
+        file: "{{ cloud_service_globals_yml }}"
+
+    - name: install cloud_service_management_portal
+      import_role:
+        name: cloud_service_management_portal
+
+# dns 的portal
+- hosts: cloud_service_dns_portal
+  tags:
+    - cloud_service_dns_portal
+  vars:
+    cloud_service_globals_yml: /etc/cloud-service/globals.yml
+  tasks:
+    - name: "include {{ cloud_service_globals_yml }} file"
+      include_vars:
+        file: "{{ cloud_service_globals_yml }}"
+
+    - name: install cloud_service_dns_portal
+      import_role:
+        name: cloud_service_dns_portal
+
+# rms 的portal
+- hosts: cloud_service_rms_portal
+  tags:
+    - cloud_service_rms_portal
+  vars:
+    cloud_service_globals_yml: /etc/cloud-service/globals.yml
+  tasks:
+    - name: "include {{ cloud_service_globals_yml }} file"
+      include_vars:
+        file: "{{ cloud_service_globals_yml }}"
+
+    - name: install cloud_service_rms_portal
+      import_role:
+        name: cloud_service_rms_portal
+
+# iam 的portal
+- hosts: cloud_service_iam_portal
+  tags:
+    - cloud_service_iam_portal
+  vars:
+    cloud_service_globals_yml: /etc/cloud-service/globals.yml
+  tasks:
+    - name: "include {{ cloud_service_globals_yml }} file"
+      include_vars:
+        file: "{{ cloud_service_globals_yml }}"
+
+    - name: install cloud_service_iam_portal
+      import_role:
+        name: cloud_service_iam_portal
+
+# base 的portal
+- hosts: cloud_service_base_portal
+  tags:
+    - cloud_service_base_portal
+  vars:
+    cloud_service_globals_yml: /etc/cloud-service/globals.yml
+  tasks:
+    - name: "include {{ cloud_service_globals_yml }} file"
+      include_vars:
+        file: "{{ cloud_service_globals_yml }}"
+
+    - name: install cloud_service_base_portal
+      import_role:
+        name: cloud_service_base_portal

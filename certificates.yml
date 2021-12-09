@@ -1,0 +1,14 @@
+---
+- hosts: localhost
+  vars:
+    cloud_service_globals_yml: /etc/cloud-service/globals.yml
+  tasks:
+    - name: "include {{ cloud_service_globals_yml }} file"
+      include_vars:
+        file: "{{ cloud_service_globals_yml }}"
+
+    - name: generate self-signed certificates
+      import_role:
+        name: certificates
+      tags:
+        - certificates
