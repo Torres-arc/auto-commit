@@ -1,0 +1,27 @@
+---
+##########
+# Docker #
+##########
+docker_registry: ''
+cloud_monitor_image_namespace: "cloud-service"
+cloud_monitor_image_name: "cloud-monitor"
+cloud_monitor_image_tag: "{{ cloud_service_monitor_tag }}"
+
+cloud_monitor_image_force_pull: false
+
+cloud_monitor_image_fullname: "\
+{{ docker_registry ~ '/' if docker_registry else '' }}\
+{{ cloud_monitor_image_namespace ~ '/' if cloud_monitor_image_namespace else '' }}\
+{{ cloud_monitor_image_name }}:\
+{{ cloud_monitor_image_tag }}"
+
+cloud_monitor_container_name: "cloud-monitor"
+
+cloud_monitor_log_path: "/var/log/cloud-monitor/"
+cloud_monitor_etc_path: "/etc/{{ cloud_monitor_container_name }}"
+
+############
+# Sql init #
+############
+sql_files:
+  - 00_cloud_monitor_init_ddl.sql

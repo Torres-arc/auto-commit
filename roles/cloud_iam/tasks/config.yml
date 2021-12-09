@@ -1,0 +1,25 @@
+---
+# 创建配置文件目录和数据文件目录
+- name: ensure cloud iam etc and data folder
+  become: True
+  file:
+    path: "{{ item }}"
+    recurse: yes
+    state: directory
+    mode: 0777
+  with_items:
+    - "{{ cloud_iam_etc_path }}"
+    - "{{ cloud_iam_log_path }}"
+    - "{{ cloud_iam_fernet_etc_path }}"
+    - "{{ cloud_iam_credential_etc_path }}"
+
+# 设置当前启动节点ip
+- name: set cloud iam bootstrap node
+  set_fact:
+    cloud_iam_bootstrap_node: "{{ ansible_play_hosts|first }}"
+
+# 设置httpd配置中的监听地址
+- name: set cloud iam host
+  set_fact:
+    cloud_iam_host: "{{ network_interface|address(ip_version=ip_version) }}"
+

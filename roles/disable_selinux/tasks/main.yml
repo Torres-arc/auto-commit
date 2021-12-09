@@ -1,0 +1,11 @@
+---
+- name: install libselinux-python package
+  yum:
+    name:
+      - libselinux-python
+    disablerepo: "{{ yum_disablerepo|default(omit) }}"
+    enablerepo: "{{ yum_enablerepo|default(omit) }}"
+
+- name: disable selinux
+  selinux:
+    state: disabled
