@@ -1,0 +1,139 @@
+---
+############
+# 通no-vnc时部署ngixn和coredns的时候用到 #
+############
+cloud_service_coredns_tag: "1.8.0"
+
+cloud_service_nginx_tag: "1.16.0"
+############
+# password #
+############
+# TODO(jeffrey4l): should use random generated password
+database_password: 1ht5wmy4xbezahna6x8xa2zahw4b5wd1
+haproxy_stats_password: phpkh4eiq68jasl8bbjv1zskv3ytpxil
+rabbitmq_password: pass
+tomcat_password: admint0mcat
+
+####################
+# Global variables #
+####################
+release_path: /opt/cloud-service
+license_file: "{{ release_path }}/p4lic.properties"
+
+ip_version: 4
+default_cpuset_cpus: "{{ omit }}"
+network_interface: eth0
+docker_force_pull: false
+language: cn
+
+internal_vip_address: ""
+internal_interface: "{{ network_interface }}"
+internal_fqdn: "{{ internal_vip_address }}"
+
+# 中心nginx ip 必须是浮动ip，而不是内网vip
+center_nginx_address: "http://172.168.1.1"
+
+# cloud-service image tags
+# Override by global.yml
+cloud_service_monitor_tag: "latest"
+cloud_service_vpc_tag: "latest"
+cloud_service_dns_tag: "latest"
+cloud_service_trail_tag: "latest"
+cloud_service_ecs_tag: "latest"
+cloud_service_rms_tag: "latest"
+cloud_service_iam_tag: "latest"
+cloud_service_common_tag: "1.0.0rc1"
+cloud_service_memcached_tag: "1.6.9"
+cloud_service_base_portal_tag: "latest"
+cloud_service_ecs_portal_tag: "latest"
+cloud_service_vpc_portal_tag: "latest"
+cloud_service_trail_portal_tag: "latest"
+cloud_service_rms_portal_tag: "latest"
+cloud_service_dns_portal_tag: "latest"
+cloud_service_iam_portal_tag: "latest"
+cloud_service_dedicated_portal_tag: "latest"
+cloud_service_management_portal_tag: "latest"
+
+
+# cloud-service server port
+internal_vpc_port: "9081"
+internal_dns_port: "9082"
+internal_trail_port: "9083"
+internal_monitor_port: "9084"
+internal_ecs_port: "9999"
+internal_rms_port: "7777"
+
+internal_iam_port: "5555"
+internal_iam_admin_port: "35357"
+internal_iam_public_port: "5555"
+
+base_dashboard_port: "3002"
+vpc_dashboard_port: "3000"
+ecs_dashboard_port: "3001"
+dns_dashboard_port: "3004"
+rms_dashboard_port: "3003"
+iam_dashboard_port: "3005"
+trail_dashboard_port: "3006"
+dedicated_dashboard_port: "3007"
+management_dashboard_port: "3008"
+
+external_interface: ""
+external_vip_address: "{{ internal_vip_address }}"
+external_fqdn: "{{ external_vip_address }}"
+
+enable_tls: false
+enable_haproxy: true
+enable_rabbitmq: true
+# enable_tomcat=enable_vpc
+enable_tomcat: true
+enable_monitor: true
+enable_trail: true
+enable_dns: true
+enable_ecs: true
+enable_iam: true
+enable_rms: true
+
+enable_base_portal: true
+enable_vpc_portal: true
+enable_dns_portal: true
+enable_ecs_portal: true
+enable_rms_portal: true
+enable_trail_portal: true
+enable_dedicated_portal: true
+enable_management_portal: true
+
+
+enable_mariadb: true
+enable_monitoring: false
+enable_prometheus: "{{ enable_monitoring | bool }}"
+enable_alertmanager: "{{ enable_monitoring | bool }}"
+enable_blackbox_exporter: "{{ enable_monitoring | bool }}"
+enable_node_exporter: "{{ enable_monitoring | bool }}"
+
+##########
+# Docker #
+##########
+docker_registry: ''
+
+##############
+# prometheus #
+##############
+prometheus_image_force_pull: "{{ docker_force_pull }}"
+
+prometheus_ip_version: "{{ ip_version }}"
+prometheus_listen_interface: "{{ network_interface }}"
+prometheus_listen_port: 9090
+prometheus_rule_files:
+  - "{{ playbook_dir }}/roles/node_exporter/rules/node_default.yml"
+# prometheus_federate_configs:
+#   - targets:
+#       - 192.168.1.100:9090
+#     labels:
+#       cluster_id: bj-openstack
+#   - targets:
+#       - 172.18.22.100:9090
+#     labels:
+#       cluster_id: sh-openstack
+#   - targets:
+#       - 10.10.0.100:9090
+#     labels:

@@ -1,0 +1,11 @@
+[rabbitmq_rabbitmq-server]
+name=rabbitmq_rabbitmq-server
+baseurl=https://packagecloud.io/rabbitmq/rabbitmq-server/el/$releasever/$basearch
+gpgcheck=0
+enabled=1
+
+[rabbitmq_rabbitmq-erlang]
+name=rabbitmq_rabbitmq-erlang
+baseurl=http://packages.erlang-solutions.com/erlang/rpm/centos/$releasever/$basearch
+gpgcheck=0
+enabled=1
