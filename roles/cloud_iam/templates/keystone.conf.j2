@@ -677,3 +677,153 @@ sender_pwd = {{ email_sender_pwd }}
 
 # Maximum number of database connection retries during startup. Set to -1 to
 # specify an infinite retry count. (integer value)
+# Deprecated group/name - [DEFAULT]/sql_max_retries
+# Deprecated group/name - [DATABASE]/sql_max_retries
+#max_retries = 10
+
+# Interval between retries of opening a SQL connection. (integer value)
+# Deprecated group/name - [DEFAULT]/sql_retry_interval
+# Deprecated group/name - [DATABASE]/reconnect_interval
+#retry_interval = 10
+
+# If set, use this value for max_overflow with SQLAlchemy. (integer value)
+# Deprecated group/name - [DEFAULT]/sql_max_overflow
+# Deprecated group/name - [DATABASE]/sqlalchemy_max_overflow
+#max_overflow = 50
+
+# Verbosity of SQL debugging information: 0=None, 100=Everything. (integer
+# value)
+# Minimum value: 0
+# Maximum value: 100
+# Deprecated group/name - [DEFAULT]/sql_connection_debug
+#connection_debug = 0
+
+# Add Python stack traces to SQL as comment strings. (boolean value)
+# Deprecated group/name - [DEFAULT]/sql_connection_trace
+#connection_trace = false
+
+# If set, use this value for pool_timeout with SQLAlchemy. (integer value)
+# Deprecated group/name - [DATABASE]/sqlalchemy_pool_timeout
+#pool_timeout = <None>
+
+# Enable the experimental use of database reconnect on connection lost.
+# (boolean value)
+#use_db_reconnect = false
+
+# Seconds between retries of a database transaction. (integer value)
+#db_retry_interval = 1
+
+# If True, increases the interval between retries of a database operation up to
+# db_max_retry_interval. (boolean value)
+#db_inc_retry_interval = true
+
+# If db_inc_retry_interval is set, the maximum seconds between retries of a
+# database operation. (integer value)
+#db_max_retry_interval = 10
+
+# Maximum retries in case of connection error or deadlock error before error is
+# raised. Set to -1 to specify an infinite retry count. (integer value)
+#db_max_retries = 20
+
+# Optional URL parameters to append onto the connection URL at connect time;
+# specify as param1=value1&param2=value2&... (string value)
+#connection_parameters =
+
+
+[domain_config]
+
+#
+# From keystone
+#
+
+# Entry point for the domain-specific configuration driver in the
+# `keystone.resource.domain_config` namespace. Only a `sql` option is provided
+# by keystone, so there is no reason to set this unless you are providing a
+# custom entry point. (string value)
+#driver = sql
+
+# Toggle for caching of the domain-specific configuration backend. This has no
+# effect unless global caching is enabled. There is normally no reason to
+# disable this. (boolean value)
+#caching = true
+
+# Time-to-live (TTL, in seconds) to cache domain-specific configuration data.
+# This has no effect unless `[domain_config] caching` is enabled. (integer
+# value)
+#cache_time = 300
+
+
+[endpoint_filter]
+
+#
+# From keystone
+#
+
+# Entry point for the endpoint filter driver in the `keystone.endpoint_filter`
+# namespace. Only a `sql` option is provided by keystone, so there is no reason
+# to set this unless you are providing a custom entry point. (string value)
+#driver = sql
+
+# This controls keystone's behavior if the configured endpoint filters do not
+# result in any endpoints for a user + project pair (and therefore a
+# potentially empty service catalog). If set to true, keystone will return the
+# entire service catalog. If set to false, keystone will return an empty
+# service catalog. (boolean value)
+#return_all_endpoints_if_no_filter = true
+
+
+[endpoint_policy]
+
+#
+# From keystone
+#
+
+# Entry point for the endpoint policy driver in the `keystone.endpoint_policy`
+# namespace. Only a `sql` driver is provided by keystone, so there is no reason
+# to set this unless you are providing a custom entry point. (string value)
+#driver = sql
+
+
+[eventlet_server]
+
+#
+# From keystone
+#
+
+# DEPRECATED: The IP address of the network interface for the public service to
+# listen on. (host address value)
+# Deprecated group/name - [DEFAULT]/bind_host
+# Deprecated group/name - [DEFAULT]/public_bind_host
+# This option is deprecated for removal since K.
+# Its value may be silently ignored in the future.
+# Reason: Support for running keystone under eventlet has been removed in the
+# Newton release. These options remain for backwards compatibility because they
+# are used for URL substitutions.
+#public_bind_host = 0.0.0.0
+
+# DEPRECATED: The port number for the public service to listen on. (port value)
+# Minimum value: 0
+# Maximum value: 65535
+# Deprecated group/name - [DEFAULT]/public_port
+# This option is deprecated for removal since K.
+# Its value may be silently ignored in the future.
+# Reason: Support for running keystone under eventlet has been removed in the
+# Newton release. These options remain for backwards compatibility because they
+# are used for URL substitutions.
+#public_port = 5000
+
+# DEPRECATED: The IP address of the network interface for the admin service to
+# listen on. (host address value)
+# Deprecated group/name - [DEFAULT]/bind_host
+# Deprecated group/name - [DEFAULT]/admin_bind_host
+# This option is deprecated for removal since K.
+# Its value may be silently ignored in the future.
+# Reason: Support for running keystone under eventlet has been removed in the
+# Newton release. These options remain for backwards compatibility because they
+# are used for URL substitutions.
+#admin_bind_host = 0.0.0.0
+
+# DEPRECATED: The port number for the admin service to listen on. (port value)
+# Minimum value: 0
+# Maximum value: 65535
+# Deprecated group/name - [DEFAULT]/admin_port
