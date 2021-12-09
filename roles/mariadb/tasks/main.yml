@@ -20,3 +20,54 @@
   debug:
     msg: |-
       up: {{ groups.cluster_status_up|default([]) }}
+      down: {{ groups.cluster_status_down|default([]) }}
+  run_once: true
+
+# only required when mariadb volume does not exist
+- import_tasks: "bootstrap.yml"
+  when:
+    - groups.cluster_status_up|default([])|length == 0
+    - inventory_hostname == mariadb_bootstrap_node
+    - not check_mariadb_volume.exists
+
+# when there is no running node
+- name: bootstrap the galera cluster first node
+  include_tasks: "install.yml"
+  vars:
+    args: "--wsrep-new-cluster"
+    prefix: "Bootstrap node"
+  when:
+    - cluster_status == 'down'
+    - groups.cluster_status_up|default([])|length == 0
+    - inventory_hostname == mariadb_bootstrap_node
+
+# start other nodes
+- name: start galera cluster other nodes
+  include_tasks: "install.yml"
+  vars:
+    args: ""
+    prefix: "Slave nodes"
+  when:
+    - cluster_status == 'down'
+    - >-
+      (groups.cluster_status_up|default([])|length == 0 and inventory_hostname != mariadb_bootstrap_node)
+      or
+      groups.cluster_status_up|default([])|length > 0
+
+# restart the bootstrap node when there are more than 1 nodes
+- name: restart the bootstrap galera cluster node
+  include_tasks: "install.yml"
+  vars:
+    args: ""
+    prefix: "Bootstrap node"
+  when:
+    - cluster_status == 'down'
+    - groups.cluster_status_up|default([])|length == 0
+    - inventory_hostname == mariadb_bootstrap_node
+    - ansible_play_hosts | length > 1
+
+- name: flush handlers
+  meta: flush_handlers
+
+- name: configure haproxy mysql user
+  import_tasks: haproxy.yml

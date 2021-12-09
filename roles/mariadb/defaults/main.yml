@@ -1,0 +1,41 @@
+---
+##########
+# Docker #
+##########
+docker_registry: ''
+mariadb_image_namespace: "cloud-service"
+mariadb_image_name: "common"
+mariadb_image_tag: "{{ cloud_service_common_tag }}"
+
+mariadb_image_force_pull: false
+
+mariadb_image_fullname: "\
+{{ docker_registry ~ '/' if docker_registry else '' }}\
+{{ mariadb_image_namespace ~ '/' if mariadb_image_namespace else '' }}\
+{{ mariadb_image_name }}:\
+{{ mariadb_image_tag }}"
+
+mariadb_container_name: "mariadb"
+
+############
+# mariadb #
+############
+mariadb_etc_path: "/etc/{{ mariadb_container_name }}"
+
+mariadb_ip_version: 4
+mariadb_listen_interface: any
+mariadb_listen_port: 3306
+mariadb_wsrep_port: 4567
+mariadb_ist_port: 4568
+mariadb_sst_port: 4444
+sst_method: rsync
+database_user: root
+database_password: pass
+database_max_timeout: "120"
+database_cluster_name: cloud-service
+
+mariadb_listen_address: "{{ mariadb_listen_interface|address(ip_version=mariadb_ip_version) }}"
+
+os_base_distro: "centos"
+# destroy tasks
+mariadb_destroy_all: true
