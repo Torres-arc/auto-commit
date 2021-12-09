@@ -1,0 +1,20 @@
+Listen {{ cloud_service_host }}:{{ internal_ecs_port }}
+
+ServerSignature Off
+ServerTokens Prod
+TraceEnable off
+
+<VirtualHost *:{{ internal_ecs_port }}>
+    ServerName {{ cloud_service_host }}
+    WSGIScriptAlias / /usr/local/lib/python3.6/site-packages/cloud_service/api/app.wsgi
+    WSGIDaemonProcess ecsapi group=ecsapi processes=5 threads=1 user=ecsapi
+    WSGIProcessGroup ecsapi
+    DocumentRoot /usr/local/lib/python3.6/site-packages/cloud_service/api
+    <Directory /usr/local/lib/python3.6/site-packages/cloud_service/api>
+        Require all granted
+    </Directory>
+
+    ErrorLog "/var/log/kolla/cloud-service/ecs-error.log"
+    CustomLog "/var/log/kolla/cloud-service/ecs-access.log" common
+</VirtualHost>
+

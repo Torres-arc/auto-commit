@@ -1,0 +1,73 @@
+---
+##########
+# Docker #
+##########
+docker_registry: ''
+cloud_ecs_image_namespace: "cloud-service"
+cloud_ecs_image_name: "cloud-ecs"
+cloud_ecs_image_tag: "{{ cloud_service_ecs_tag }}"
+
+cloud_ecs_image_force_pull: false
+
+cloud_ecs_image_fullname: "\
+{{ docker_registry ~ '/' if docker_registry else '' }}\
+{{ cloud_ecs_image_namespace ~ '/' if cloud_ecs_image_namespace else '' }}\
+{{ cloud_ecs_image_name }}:\
+{{ cloud_ecs_image_tag }}"
+
+cloud_ecs_container_name: "cloud-ecs"
+cloud_ecs_api_container_name: "cloud-ecs-api"
+cloud_ecs_engine_container_name: "cloud-ecs-engine"
+resource_management_bootstrap_container_name: "cloud-ecs-bootstrap"
+
+############
+# common #
+############
+# 中心nginx ip
+center_nginx_address: "http://172.168.1.1"
+
+# database
+cloud_ecs_database_name: "cloud-service"
+
+# config
+cloud_ecs_config_files:
+  api_paste:
+      name: api_paste.ini.j2
+      path: "{{ cloud_ecs_etc_path }}/api_paste.ini"
+  config-generator:
+      name: cloud-service-config-generator.conf.j2
+      path: "{{ cloud_ecs_etc_path }}/cloud-service-config-generator.conf"
+  cloud_service_api:
+      name: cloud_service_api.conf.j2
+      path: "{{ cloud_ecs_etc_path }}/cloud_service_api.conf"
+  cloud_service_engine:
+    name: cloud_service_engine.conf.j2
+    path: "{{ cloud_ecs_etc_path }}/cloud_service_engine.conf"
+  app_httpd:
+    name: app_httpd.conf.j2
+    path: "{{ cloud_ecs_etc_path }}/app_httpd.conf"
+
+############
+# etc && data dir #
+############
+cloud_ecs_etc_path: "/etc/{{ cloud_ecs_container_name }}"
+cloud_ecs_api_log_path: "/var/log/{{ cloud_ecs_api_container_name }}"
+cloud_ecs_engine_log_path: "/var/log/{{ cloud_ecs_engine_container_name }}"
+
+############
+# rabbitmq #
+############
+
+ecs_rabbitmq_url: "{% for host in groups.rabbitmq %}{{ rabbitmq_user }}:{{ rabbitmq_password }}@{{ hostvars[host]['rabbitmq_listen_interface'] |address(ip_version=ip_version, hostname=host)|ipwrap }}:{{ rabbitmq_listen_port }}{% if not loop.last %},{% endif %}{% endfor %}"
+
+############
+# Sql init #
+############
+sql_files:
+  - 00_cloud_service_init_ddl.sql
+
+############
+# instance_cdrom_size 配置驱动盘大小，可配置，默认20G #
+############
+instance_cdrom_size: 20
+order_endpoint: "http://172.20.151.100:5000"

@@ -1,0 +1,39 @@
+[DEFAULT]
+#transport_url = rabbit://{{ rabbitmq_user }}:{{ rabbitmq_password }}@{{ rabbitmq_url }}
+transport_url = rabbit://{{ ecs_rabbitmq_url }}//
+
+debug = true
+
+log_dir=/var/log/kolla/cloud-service/
+log_file=cloud-service-engine.log
+logfile_mode='0777'
+
+[order_endpoint]
+endpoint={{order_endpoint}}
+
+[cache]
+enabled = true
+backend = dogpile.cache.memory
+
+[nova]
+instance_cdrom_size={{ instance_cdrom_size }}
+
+[database]
+connection = mysql+pymysql://{{ database_user }}:{{ database_password }}@{{ internal_vip_address }}:{{ mariadb_listen_port }}/{{ cloud_ecs_database_name }}
+
+[vnc_proxy]
+vnc_proxy_domain={{ center_nginx_address }}
+
+[vpc_endpoint]
+endpoint=http://{{ internal_vip_address }}:{{ internal_vpc_port }}
+
+[iam_endpoint]
+endpoint=http://{{ internal_vip_address }}:{{ internal_iam_port }}
+
+[resource_management]
+endpoint=http://{{ internal_vip_address }}:{{ internal_rms_port }}
+
+#
+# From oslo.log
+#
+
