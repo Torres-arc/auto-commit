@@ -1,0 +1,21 @@
+---
+############
+# 删除容器，数据目录 #
+############
+
+- name: remove {{ cloud_nginx_container_name }} container
+  docker_container:
+    name: "{{ cloud_nginx_container_name }}"
+    state: absent
+
+
+# 删除目录
+- name: remove {{ cloud_nginx_container_name }} data folder
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ cloud_nginx_etc_path }}"
+    - "{{ cloud_nginx_log_path }}"
+
+

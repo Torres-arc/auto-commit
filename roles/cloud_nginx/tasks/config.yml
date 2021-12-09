@@ -26,3 +26,49 @@
   notify:
     - restart cloud-nginx service
 
+# 拷贝nginx.crt文件
+- name: copy center nginx cert file
+  template:
+    src: nginx.crt
+    dest: "{{ cloud_nginx_etc_path }}/nginx.crt"
+  when:
+    - cloud_config_mode == "center" or cloud_config_mode == "dedicated" or cloud_config_mode == "direct"
+  notify:
+    - restart cloud-nginx service
+
+# 拷贝nginx.key文件
+- name: copy center nginx key file
+  template:
+    src: nginx.key
+    dest: "{{ cloud_nginx_etc_path }}/nginx.key"
+  when:
+    - cloud_config_mode == "center" or cloud_config_mode == "dedicated" or cloud_config_mode == "direct"
+  notify:
+    - restart cloud-nginx service
+
+- name: copy province nginx config file
+  template:
+    src: nginx_province.conf.j2
+    dest: "{{ cloud_nginx_etc_path }}/nginx.conf"
+  when:
+    - cloud_config_mode == "province"
+  notify:
+    - restart cloud-nginx service
+
+- name: copy dedicated nginx config file
+  template:
+    src: nginx_dedicated.conf.j2
+    dest: "{{ cloud_nginx_etc_path }}/nginx.conf"
+  when:
+    - cloud_config_mode == "dedicated"
+  notify:
+    - restart cloud-nginx service
+
+- name: copy direct nginx config file
+  template:
+    src: nginx_direct.conf.j2
+    dest: "{{ cloud_nginx_etc_path }}/nginx.conf"
+  when:
+    - cloud_config_mode == "direct"
+  notify:
+    - restart cloud-nginx service
