@@ -1,0 +1,3 @@
+---
+- import_tasks: generate-root-ca.yaml
+- import_tasks: generate-cert.yaml

@@ -24,3 +24,10 @@
     openssl req
     -x509
     -new -nodes
+    -key "{{ certificates_dir }}/ca.key"
+    -sha256
+    -days 1825
+    -out "{{ ca_path }}"
+    -subj "/CN=TestCA/"
+  args:
+    creates: "{{ ca_path }}"

@@ -1,0 +1,30 @@
+[req]
+prompt = no
+distinguished_name = req_distinguished_name
+req_extensions = v3_req
+
+[req_distinguished_name]
+countryName = US
+stateOrProvinceName = NC
+localityName = RTP
+organizationalUnitName = cloud-service
+commonName = {{ external_fqdn }}
+
+[v3_req]
+subjectAltName = @alt_names
+basicConstraints = critical, CA:TRUE
+subjectKeyIdentifier = hash
+keyUsage = critical, nonRepudiation, digitalSignature, keyEncipherment, keyAgreement, cRLSign, keyCertSign
+extendedKeyUsage = critical, serverAuth, clientAuth
+
+[alt_names]
+{% if external_fqdn != external_vip_address %}
+DNS.1 = {{ external_fqdn }}
+{% endif %}
+{% if internal_fqdn != external_fqdn %}
+DNS.2 = {{ internal_fqdn }}
+{% endif %}
+IP.1 = {{ external_vip_address }}
+{% if external_vip_address != internal_vip_address %}
+IP.2 = {{ internal_vip_address }}
+{% endif %}

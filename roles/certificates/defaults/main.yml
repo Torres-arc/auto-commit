@@ -1,0 +1,6 @@
+---
+certificates_dir: "/etc/cloud-service/certificates"
+ca_path: "{{ certificates_dir }}/ca.crt"
+cert_path: "{{ certificates_dir }}/cloud_service.crt"
+key_path: "{{ certificates_dir }}/cloud_service.key"
+enable_tls: false
