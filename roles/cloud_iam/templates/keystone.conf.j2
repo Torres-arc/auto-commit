@@ -377,3 +377,153 @@ sender_pwd = {{ email_sender_pwd }}
 # `keystone.auth.external` namespace. Supplied drivers are `DefaultDomain` and
 # `Domain`. The default driver is `DefaultDomain`, which assumes that all users
 # identified by the username specified to keystone in the `REMOTE_USER`
+# variable exist within the context of the default domain. The `Domain` option
+# expects an additional environment variable be presented to keystone,
+# `REMOTE_DOMAIN`, containing the domain name of the `REMOTE_USER` (if
+# `REMOTE_DOMAIN` is not set, then the default domain will be used instead).
+# You do not need to set this unless you are taking advantage of "external
+# authentication", where the application server (such as Apache) is handling
+# authentication instead of keystone. (string value)
+#external = <None>
+
+# Entry point for the OAuth 1.0a auth plugin module in the
+# `keystone.auth.oauth1` namespace. You do not need to set this unless you are
+# overriding keystone's own `oauth1` authentication plugin. (string value)
+#oauth1 = <None>
+
+# Entry point for the mapped auth plugin module in the `keystone.auth.mapped`
+# namespace. You do not need to set this unless you are overriding keystone's
+# own `mapped` authentication plugin. (string value)
+#mapped = <None>
+
+# Entry point for the application_credential auth plugin module in the
+# `keystone.auth.application_credential` namespace. You do not need to set this
+# unless you are overriding keystone's own `application_credential`
+# authentication plugin. (string value)
+#application_credential = <None>
+
+
+[cache]
+
+#
+# From oslo.cache
+#
+
+# Prefix for building the configuration dictionary for the cache region. This
+# should not need to be changed unless there is another dogpile.cache region
+# with the same configuration name. (string value)
+#config_prefix = cache.oslo
+
+# Default TTL, in seconds, for any cached item in the dogpile.cache region.
+# This applies to any cached method that doesn't have an explicit cache
+# expiration time defined for it. (integer value)
+#expiration_time = 600
+
+# Cache backend module. For eventlet-based or environments with hundreds of
+# threaded servers, Memcache with pooling (oslo_cache.memcache_pool) is
+# recommended. For environments with less than 100 threaded servers, Memcached
+# (dogpile.cache.memcached) or Redis (dogpile.cache.redis) is recommended. Test
+# environments with a single instance of the server can use the
+# dogpile.cache.memory backend. (string value)
+# Possible values:
+# oslo_cache.memcache_pool - <No description provided>
+# oslo_cache.dict - <No description provided>
+# oslo_cache.mongo - <No description provided>
+# oslo_cache.etcd3gw - <No description provided>
+# dogpile.cache.memcached - <No description provided>
+# dogpile.cache.pylibmc - <No description provided>
+# dogpile.cache.bmemcached - <No description provided>
+# dogpile.cache.dbm - <No description provided>
+# dogpile.cache.redis - <No description provided>
+# dogpile.cache.memory - <No description provided>
+# dogpile.cache.memory_pickle - <No description provided>
+# dogpile.cache.null - <No description provided>
+#backend = dogpile.cache.null
+
+# Arguments supplied to the backend module. Specify this option once per
+# argument to be passed to the dogpile.cache backend. Example format:
+# "<argname>:<value>". (multi valued)
+#backend_argument =
+
+# Proxy classes to import that will affect the way the dogpile.cache backend
+# functions. See the dogpile.cache documentation on changing-backend-behavior.
+# (list value)
+#proxies =
+
+# Global toggle for caching. (boolean value)
+#enabled = true
+
+# Extra debugging from the cache backend (cache keys, get/set/delete/etc
+# calls). This is only really useful if you need to see the specific cache-
+# backend get/set/delete calls with the keys/values.  Typically this should be
+# left set to false. (boolean value)
+#debug_cache_backend = false
+
+# Memcache servers in the format of "host:port". (dogpile.cache.memcached and
+# oslo_cache.memcache_pool backends only). If a given host refer to an IPv6 or
+# a given domain refer to IPv6 then you should prefix the given address with
+# the address family (``inet6``) (e.g ``inet6[::1]:11211``,
+# ``inet6:[fd12:3456:789a:1::1]:11211``,
+# ``inet6:[controller-0.internalapi]:11211``). If the address family is not
+# given then default address family used will be ``inet`` which correspond to
+# IPv4 (list value)
+#memcache_servers = localhost:11211
+
+# Number of seconds memcached server is considered dead before it is tried
+# again. (dogpile.cache.memcache and oslo_cache.memcache_pool backends only).
+# (integer value)
+#memcache_dead_retry = 300
+
+# Timeout in seconds for every call to a server. (dogpile.cache.memcache and
+# oslo_cache.memcache_pool backends only). (floating point value)
+#memcache_socket_timeout = 1.0
+
+# Max total number of open connections to every memcached server.
+# (oslo_cache.memcache_pool backend only). (integer value)
+#memcache_pool_maxsize = 10
+
+# Number of seconds a connection to memcached is held unused in the pool before
+# it is closed. (oslo_cache.memcache_pool backend only). (integer value)
+#memcache_pool_unused_timeout = 60
+
+# Number of seconds that an operation will wait to get a memcache client
+# connection. (integer value)
+#memcache_pool_connection_get_timeout = 10
+
+# Global toggle for TLS usage when comunicating with the caching servers.
+# (boolean value)
+#tls_enabled = false
+
+# Path to a file of concatenated CA certificates in PEM format necessary to
+# establish the caching servers' authenticity. If tls_enabled is False, this
+# option is ignored. (string value)
+#tls_cafile = <None>
+
+# Path to a single file in PEM format containing the client's certificate as
+# well as any number of CA certificates needed to establish the certificate's
+# authenticity. This file is only required when client side authentication is
+# necessary. If tls_enabled is False, this option is ignored. (string value)
+#tls_certfile = <None>
+
+# Path to a single file containing the client's private key in. Otherwhise the
+# private key will be taken from the file specified in tls_certfile. If
+# tls_enabled is False, this option is ignored. (string value)
+#tls_keyfile = <None>
+
+# Set the available ciphers for sockets created with the TLS context. It should
+# be a string in the OpenSSL cipher list format. If not specified, all OpenSSL
+# enabled ciphers will be available. (string value)
+#tls_allowed_ciphers = <None>
+
+
+[catalog]
+
+#
+# From keystone
+#
+
+# Absolute path to the file used for the templated catalog backend. This option
+# is only used if the `[catalog] driver` is set to `templated`. (string value)
+#template_file = default_catalog.templates
+
+# Entry point for the catalog driver in the `keystone.catalog` namespace.
