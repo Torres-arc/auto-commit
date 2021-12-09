@@ -181,3 +181,153 @@ region_id=cn-wuxi1
 
 # Log level name used by rate limiting: CRITICAL, ERROR, INFO, WARNING, DEBUG
 # or empty string. Logs with level greater or equal to rate_limit_except_level
+# are not filtered. An empty string means that all levels are filtered. (string
+# value)
+#rate_limit_except_level = CRITICAL
+
+# Enables or disables fatal status of deprecations. (boolean value)
+#fatal_deprecations = false
+
+#
+# From oslo.messaging
+#
+
+# Size of RPC connection pool. (integer value)
+#rpc_conn_pool_size = 30
+
+# The pool size limit for connections expiration policy (integer value)
+#conn_pool_min_size = 2
+
+# The time-to-live in sec of idle connections in the pool (integer value)
+#conn_pool_ttl = 1200
+
+# Size of executor thread pool when executor is threading or eventlet. (integer
+# value)
+# Deprecated group/name - [DEFAULT]/rpc_thread_pool_size
+#executor_thread_pool_size = 64
+
+# Seconds to wait for a response from a call. (integer value)
+#rpc_response_timeout = 60
+
+# The network address and optional user credentials for connecting to the
+# messaging backend, in URL format. The expected format is:
+#
+# driver://[user:pass@]host:port[,[userN:passN@]hostN:portN]/virtual_host?query
+#
+# Example: rabbit://rabbitmq:password@127.0.0.1:5672//
+#
+# For full details on the fields in the URL see the documentation of
+# oslo_messaging.TransportURL at
+# https://docs.openstack.org/oslo.messaging/latest/reference/transport.html
+# (string value)
+#transport_url = rabbit://
+
+# The default exchange under which topics are scoped. May be overridden by an
+# exchange name specified in the transport_url option. (string value)
+#control_exchange = openstack
+
+#
+# From oslo.service.periodic_task
+#
+
+# Some periodic tasks can be run in a separate process. Should we run them
+# here? (boolean value)
+#run_external_periodic_tasks = true
+
+#
+# From oslo.service.service
+#
+
+# Enable eventlet backdoor.  Acceptable values are 0, <port>, and
+# <start>:<end>, where 0 results in listening on a random tcp port number;
+# <port> results in listening on the specified port number (and not enabling
+# backdoor if that port is in use); and <start>:<end> results in listening on
+# the smallest unused port number within the specified range of port numbers.
+# The chosen port is displayed in the service's log file. (string value)
+#backdoor_port = <None>
+
+# Enable eventlet backdoor, using the provided path as a unix socket that can
+# receive connections. This option is mutually exclusive with 'backdoor_port'
+# in that only one should be provided. If both are provided then the existence
+# of this option overrides the usage of that option. Inside the path {pid} will
+# be replaced with the PID of the current process. (string value)
+#backdoor_socket = <None>
+
+# Enables or disables logging values of all registered options when starting a
+# service (at DEBUG level). (boolean value)
+#log_options = true
+
+# Specify a timeout after which a gracefully shutdown server will exit. Zero
+# value means endless wait. (integer value)
+#graceful_shutdown_timeout = 60
+
+#
+# From resource_management
+#
+
+# Configuration file for WSGI definition of API. (string value)
+#api_paste_config = api_paste.ini
+
+# The type of authentication to use. (string value)
+#auth_strategy = keystone
+
+
+[api]
+
+#
+# From resource_management
+#
+
+# The listen IP for the resource_management API server. (IP address value)
+#host_ip = 0.0.0.0
+
+# The port for the resource_management API server. (port value)
+# Minimum value: 0
+# Maximum value: 65535
+#port = 9999
+
+# Toggle Pecan Debug Middleware. (boolean value)
+#pecan_debug = false
+
+
+[cache]
+
+#
+# From resource_management
+#
+
+# Caching or not. (boolean value)
+#caching = true
+
+# The time for the cache. (integer value)
+#cache_time = 3600
+
+
+[cors]
+
+#
+# From oslo.middleware.cors
+#
+
+# Indicate whether this resource may be shared with the domain received in the
+# requests "origin" header. Format: "<protocol>://<host>[:<port>]", no trailing
+# slash. Example: https://horizon.example.com (list value)
+#allowed_origin = <None>
+
+# Indicate that the actual request can include user credentials (boolean value)
+#allow_credentials = true
+
+# Indicate which headers are safe to expose to the API. Defaults to HTTP Simple
+# Headers. (list value)
+#expose_headers =
+
+# Maximum cache age of CORS preflight requests. (integer value)
+#max_age = 3600
+
+# Indicate which methods can be used during the actual request. (list value)
+#allow_methods = OPTIONS,GET,HEAD,POST,PUT,DELETE,TRACE,PATCH
+
+# Indicate which header field names may be used during the actual request.
+# (list value)
+#allow_headers =
+
